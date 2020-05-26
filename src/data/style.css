@@ -1,119 +1,107 @@
 /* Copied and adapted from urlbar-autocomplete.inc.css */
 
-.urlbarView-row[dynamicType=testDynamicType] {
-  padding-block-start: 18px;
-  /* Compensating for the 16px bottom margin on the tip elements. */
-  padding-block-end: calc(18px - 16px);
+.urlbarView-row[dynamicType=dynamicWeather] {
+  padding-block: 6px;
   /* Compensating for the 4px focus ring on tip buttons. */
   padding-inline-end: calc(/*@urlbarViewItemInlinePadding@*/ 6px + 4px);
 }
 
-.testDynamicType-icon {
-  min-width: 24px;
-  height: 24px;
-  margin-inline-end: 12px;
-  flex-basis: 24px;
-  flex-grow:  0;
-  flex-shrink: 0;
-}
-
-/* The help icon is a standard Photon ghost button. */
-.testDynamicType-help {
-  min-width: 16px;
-  height: 32px;
-  background-image: url("chrome://global/skin/icons/help.svg");
-  background-size: 16px;
-  background-position: center;
-  background-repeat: no-repeat;
-  padding-inline: 8px;
-  margin-inline-start: 8px;
-  -moz-context-properties: fill, fill-opacity;
-}
-
-.testDynamicType-help[selected] {
-  box-shadow: 0 0 0 1px #0a84ff inset, 0 0 0 1px #0a84ff, 0 0 0 4px rgba(10, 132, 255, 0.3);
-}
-
-.testDynamicType-help:hover {
-  background-color: var(--urlbarView-button-background-hover);
-}
-
-.testDynamicType-help:active {
-  background-color: var(--urlbarView-button-background-active);
-}
-
-.urlbarView-row[dynamicType=testDynamicType]:not(:last-child) {
+.urlbarView-row[dynamicType=dynamicWeather]:not(:last-child) {
   border-bottom: 1px solid var(--panel-separator-color);
   margin-bottom: 4px;
 }
 
-.urlbarView-row[dynamicType=testDynamicType]:not(:first-child) {
+.urlbarView-row[dynamicType=dynamicWeather]:not(:first-child) {
   border-top: 1px solid var(--panel-separator-color);
   margin-top: 4px;
 }
 
-.urlbarView-row[dynamicType=testDynamicType] > .urlbarView-row-inner {
+.urlbarView-row[dynamicType=dynamicWeather] > .urlbarView-row-inner {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   min-height: 32px;
   width: 100%;
 }
 
-/* For tips, give the title some bottom margin so that when the window is narrow
-   and the buttons wrap below it, there's space between it and the buttons.  We
-   then need to give the same bottom margin to the other tip elements so that
-   they all remain vertically aligned. */
-.testDynamicType-icon,
-.testDynamicType-title,
-.testDynamicType-button,
-.testDynamicType-help {
-  margin-block-end: 16px;
+.urlbarView-row[dynamicType=dynamicWeather] > .urlbarView-row-inner > * {
+  margin: 6px;
 }
 
-/* The tip button is a Photon default button when unfocused and a
-   primary button in all other states. */
-.testDynamicType-button {
-  min-height: 16px;
-  padding: 8px;
-  border: none;
-  border-radius: 2px;
-  font-size: 0.93em;
-  color: inherit;
-  background-color: var(--urlbarView-button-background);
-  min-width: 8.75em;
-  text-align: center;
-  flex-basis: initial;
-  flex-shrink: 0;
+.dynamicWeather-icon {
+  -moz-context-properties: stroke;
+  stroke: currentColor;
 }
 
-.testDynamicType-button[selected] {
-  color: white;
-  background-color: var(--urlbarView-primary-button-background);
-  box-shadow: 0 0 0 1px #0a84ff inset, 0 0 0 1px #0a84ff, 0 0 0 4px rgba(10, 132, 255, 0.3);
-}
-.testDynamicType-button:hover {
-  color: white;
-  background-color: var(--urlbarView-primary-button-background-hover);
+.dynamicWeather-info {
+  display: flex;
+  flex-direction: column;
+  flex: 2;
+  margin-inline-end: 12px;
 }
 
-.testDynamicType-button:hover:active {
-  color: white;
-  background-color: var(--urlbarView-primary-button-background-active);
+.dynamicWeather-info > .dynamicWeather-location {
+  font-size: 1.5em;
 }
 
-.testDynamicType-buttonSpacer {
-  flex-basis: 48px;
-  flex-grow: 1;
-  flex-shrink: 1;
+.dynamicWeather-info > .dynamicWeather-provider {
+  font-size: 0.7em;
+  font-style: italic;
 }
 
-.testDynamicType-title {
-  white-space: normal;
-  /* Give the tip title appropriate flex so that when the window is narrow, the
-     tip buttons wrap around under it.  We want the icon and title to remain on
-     one line.  So make the title's flex-basis the width of the parent minus the
-     width of the icon. */
-  flex-basis: calc(100% - /* .urlbarView-row-inner padding-inline-start */ 6px - /* .urlbarView-favicon width */ 24px - /* .urlbarView-favicon margin-inline-end */ 12px);
-  flex-grow: 1;
-  flex-shrink: 1;
+.dynamicWeather-current {
+  flex: 2;
+  display: flex;
+  align-items: center;
+}
+
+.dynamicWeather-current  > .dynamicWeather-icon {
+  min-width: 3.5em;
+  margin-inline-end: 20px;
+}
+
+.dynamicWeather-current > .dynamicWeather-temperature {
+  font-size: 3.5em;
+}
+
+.dynamicWeather-current > .dynamicWeather-units {
+  font-size: 1.5em;
+  margin-bottom: 0.75em;
+}
+
+.dynamicWeather-daysContainer {
+  flex: 5;
+  display: flex;
+  justify-content: space-evenly;
+  /*! overflow: hidden; */
+}
+
+@media screen and (max-width: 700px) {
+  .dynamicWeather-day:last-child {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 642px) {
+  .dynamicWeather-day:nth-last-child(2) {
+    display: none;
+  }
+}
+
+.dynamicWeather-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 80px;
+  min-width: 50px;
+  padding-inline: 8px;
+}
+
+.dynamicWeather-day > .dynamicWeather-dayofweek {
+  font-size: 1.2em;
+}
+
+.dynamicWeather-day > .dynamicWeather-icon {
+  min-width: 2.2em;
 }

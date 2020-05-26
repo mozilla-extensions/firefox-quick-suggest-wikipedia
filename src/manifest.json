@@ -1,26 +1,31 @@
 {
   "manifest_version": 2,
-  "name": "Dynamic Result Type Test",
+  "name": "Dynamic Weather Test",
   "version": "1.0a",
-  "description": "An example extension for dynamic result types.",
+  "description": "Adds a weather forecast item to the Firefox Urlbar.",
   "applications": {
     "gecko": {
-      "id": "urlbar-dynamic-type-example@mozilla.org",
+      "id": "urlbar-dynamic-weather@mozilla.org",
       "strict_min_version": "69"
     }
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "urlbar-dynamic-type-example@mozilla.org",
+      "id": "urlbar-dynamic-weather@mozilla.org",
       "strict_min_version": "69"
     }
   },
   "permissions": [
+    "https://api.darksky.net/*",
+    "https://dev.virtualearth.net/*",
+    "geolocation",
+    "runtime",
     "urlbar"
   ],
   "background": {
     "scripts": [
       "shim.js",
+      "secret_keys.js",
       "background.js"
     ]
   },
