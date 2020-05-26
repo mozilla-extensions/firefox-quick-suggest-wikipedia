@@ -248,7 +248,7 @@ class ProviderDynamicWeatherTest extends UrlbarProvider {
       },
     };
 
-    for (let day = 0; day < Math.min(5, result.payload.daily.length); day++) {
+    for (let day = 0; day < 5; day++) {
       if (!result.payload.daily[day]) {
         viewUpdate[`daysContainer > .dynamicWeather-day[dayNumber='${day}']`] = {
           style: {

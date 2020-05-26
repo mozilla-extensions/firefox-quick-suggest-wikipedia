@@ -6,7 +6,7 @@
   "applications": {
     "gecko": {
       "id": "urlbar-dynamic-weather@mozilla.org",
-      "strict_min_version": "72"
+      "strict_min_version": "72.0"
     }
   },
   "browser_specific_settings": {
