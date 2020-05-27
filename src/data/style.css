@@ -28,7 +28,12 @@
   margin: 6px;
 }
 
-.dynamicWeather-icon {
+.dynamicWeather-dayIcon0,
+.dynamicWeather-dayIcon1,
+.dynamicWeather-dayIcon2,
+.dynamicWeather-dayIcon3,
+.dynamicWeather-dayIcon4,
+.dynamicWeather-currentIcon {
   -moz-context-properties: stroke;
   stroke: currentColor;
 }
@@ -55,16 +60,16 @@
   align-items: center;
 }
 
-.dynamicWeather-current  > .dynamicWeather-icon {
+.dynamicWeather-current > .dynamicWeather-currentIcon {
   min-width: 3.5em;
   margin-inline-end: 20px;
 }
 
-.dynamicWeather-current > .dynamicWeather-temperature {
+.dynamicWeather-current > .dynamicWeather-currentTemperature {
   font-size: 3.5em;
 }
 
-.dynamicWeather-current > .dynamicWeather-units {
+.dynamicWeather-current > .dynamicWeather-currentUnits {
   font-size: 1.5em;
   margin-bottom: 0.75em;
 }
@@ -76,19 +81,11 @@
   /*! overflow: hidden; */
 }
 
-@media screen and (max-width: 700px) {
-  .dynamicWeather-day:last-child {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 642px) {
-  .dynamicWeather-day:nth-last-child(2) {
-    display: none;
-  }
-}
-
-.dynamicWeather-day {
+.dynamicWeather-day0,
+.dynamicWeather-day1,
+.dynamicWeather-day2,
+.dynamicWeather-day3,
+.dynamicWeather-day4 {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -98,10 +95,30 @@
   padding-inline: 8px;
 }
 
-.dynamicWeather-day > .dynamicWeather-dayofweek {
+@media screen and (max-width: 700px) {
+  .dynamicWeather-day4 {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 642px) {
+  .dynamicWeather-day3 {
+    display: none;
+  }
+}
+
+.dynamicWeather-dayOfWeek0,
+.dynamicWeather-dayOfWeek1,
+.dynamicWeather-dayOfWeek2,
+.dynamicWeather-dayOfWeek3,
+.dynamicWeather-dayOfWeek4 {
   font-size: 1.2em;
 }
 
-.dynamicWeather-day > .dynamicWeather-icon {
+dynamicWeather-dayIcon0,
+dynamicWeather-dayIcon1,
+dynamicWeather-dayIcon2,
+dynamicWeather-dayIcon3,
+dynamicWeather-dayIcon4 {
   min-width: 2.2em;
 }

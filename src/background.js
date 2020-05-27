@@ -79,22 +79,19 @@ class ProviderDynamicWeatherTest extends UrlbarProvider {
     let daysOfWeek = [];
     for (let day = 0; day < 5; day++) {
       daysOfWeek.push({
-        name: "day",
+        name: `day${day}`,
         tag: "div",
-        attributes: {
-          dayNumber: `${day}`,
-        },
         children: [
           {
-            name: "dayofweek",
+            name: `dayOfWeek${day}`,
             tag: "span",
           },
           {
-            name: "icon",
+            name: `dayIcon${day}`,
             tag: "img",
           },
           {
-            name: "temperature",
+            name: `dayTemperature${day}`,
             tag: "span",
           },
         ],
@@ -137,15 +134,15 @@ class ProviderDynamicWeatherTest extends UrlbarProvider {
             tag: "div",
             children: [
               {
-                name: "icon",
+                name: "currentIcon",
                 tag: "img",
               },
               {
-                name: "temperature",
+                name: "currentTemperature",
                 tag: "span",
               },
               {
-                name: "units",
+                name: "currentUnits",
                 tag: "span",
               },
             ],
@@ -223,49 +220,49 @@ class ProviderDynamicWeatherTest extends UrlbarProvider {
   // Updates the result's view.
   getViewUpdate(result) {
     let viewUpdate = {
-      "info > .dynamicWeather-location": {
+      location: {
         textContent: result.payload.locationName,
       },
-      "info > .dynamicWeather-forecastTime": {
+      forecastTime: {
         textContent: result.payload.forecastTime,
       },
-      "info > .dynamicWeather-currentConditions": {
+      currentConditions: {
         textContent: result.payload.current.conditions,
       },
-      "info > .dynamicWeather-provider": {
+      provider: {
         textContent: result.payload.providerName,
       },
-      "current > .dynamicWeather-icon": {
+      currentIcon: {
         attributes: {
           src: result.payload.current.icon,
         },
       },
-      "current > .dynamicWeather-temperature": {
+      currentTemperature: {
         textContent: result.payload.current.temperature,
       },
-      "current > .dynamicWeather-units": {
+      currentUnits: {
         textContent: result.payload.units == "us" ? "°F" : "°C",
       },
     };
 
     for (let day = 0; day < 5; day++) {
       if (!result.payload.daily[day]) {
-        viewUpdate[`daysContainer > .dynamicWeather-day[dayNumber='${day}']`] = {
+        viewUpdate[`day${day}`] = {
           style: {
             display: "none",
           }
         };
         continue;
       }
-      viewUpdate[`daysContainer > .dynamicWeather-day[dayNumber='${day}'] > .dynamicWeather-dayofweek`] = {
+      viewUpdate[`dayOfWeek${day}`] = {
         textContent: result.payload.daily[day].dayOfWeek,
       };
-      viewUpdate[`daysContainer > .dynamicWeather-day[dayNumber='${day}'] > .dynamicWeather-icon`] = {
+      viewUpdate[`dayIcon${day}`] = {
         attributes: {
           src: result.payload.daily[day].icon,
         },
       };
-      viewUpdate[`daysContainer > .dynamicWeather-day[dayNumber='${day}'] > .dynamicWeather-temperature`] = {
+      viewUpdate[`dayTemperature${day}`] = {
         textContent:
           result.payload.daily[day].temperatureHigh +
           "° / " +
