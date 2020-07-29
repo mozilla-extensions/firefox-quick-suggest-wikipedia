@@ -12,7 +12,7 @@ let cachedLocation;
 let timeLocationCached;
 
 /**
- * If true, we use dummy data. Before setting this to false, create
+ * If true, use dummy data. Before setting this to false, create
  * src/secret_keys.js and populate it:
  * const DARKSKY_SECRET_KEY = "<Dark Sky API secret key";
  * const BING_SECRET_KEY = "<Bing location services secret key>";
@@ -99,61 +99,59 @@ class ProviderDynamicWeatherTest extends UrlbarProvider {
     }
 
     // Register our dynamic result type.
-    UrlbarResult.addDynamicResultType({
-      type: DYNAMIC_TYPE_NAME,
-      viewTemplate: {
-        stylesheet: "data/style.css",
-        attributes: {
-          role: "group",
-        },
-        children: [
-          {
-            name: "info",
-            tag: "div",
-            children: [
-              {
-                name: "location",
-                tag: "span",
-              },
-              {
-                name: "forecastTime",
-                tag: "span",
-              },
-              {
-                name: "currentConditions",
-                tag: "span",
-              },
-              {
-                name: "provider",
-                tag: "span",
-              },
-            ],
-          },
-          {
-            name: "current",
-            tag: "div",
-            children: [
-              {
-                name: "currentIcon",
-                tag: "img",
-              },
-              {
-                name: "currentTemperature",
-                tag: "span",
-              },
-              {
-                name: "currentUnits",
-                tag: "span",
-              },
-            ],
-          },
-          {
-            name: "daysContainer",
-            tag: "div",
-            children: daysOfWeek,
-          },
-        ]
+    UrlbarResult.addDynamicResultType(DYNAMIC_TYPE_NAME);
+    UrlbarView.addDynamicViewTemplate(DYNAMIC_TYPE_NAME, {
+      stylesheet: "data/style.css",
+      attributes: {
+        role: "group",
       },
+      children: [
+        {
+          name: "info",
+          tag: "div",
+          children: [
+            {
+              name: "location",
+              tag: "span",
+            },
+            {
+              name: "forecastTime",
+              tag: "span",
+            },
+            {
+              name: "currentConditions",
+              tag: "span",
+            },
+            {
+              name: "provider",
+              tag: "span",
+            },
+          ],
+        },
+        {
+          name: "current",
+          tag: "div",
+          children: [
+            {
+              name: "currentIcon",
+              tag: "img",
+            },
+            {
+              name: "currentTemperature",
+              tag: "span",
+            },
+            {
+              name: "currentUnits",
+              tag: "span",
+            },
+          ],
+        },
+        {
+          name: "daysContainer",
+          tag: "div",
+          children: daysOfWeek,
+        },
+      ]
     });
   }
 

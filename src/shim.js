@@ -14,8 +14,14 @@ class UrlbarResult {
     this.payload = payload;
   }
 
-  static addDynamicResultType({ type, viewTemplate }) {
-    browser.experiments.urlbar.addDynamicResultType({ type, viewTemplate });
+  static addDynamicResultType(name, type = {}) {
+    browser.experiments.urlbar.addDynamicResultType(name, type);
+  }
+}
+
+class UrlbarView {
+  static addDynamicViewTemplate(name, viewTemplate) {
+    browser.experiments.urlbar.addDynamicViewTemplate(name, viewTemplate);
   }
 }
 
