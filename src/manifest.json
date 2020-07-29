@@ -6,13 +6,13 @@
   "applications": {
     "gecko": {
       "id": "urlbar-dynamic-weather@mozilla.org",
-      "strict_min_version": "72.0"
+      "strict_min_version": "79.0"
     }
   },
   "browser_specific_settings": {
     "gecko": {
       "id": "urlbar-dynamic-weather@mozilla.org",
-      "strict_min_version": "72"
+      "strict_min_version": "79"
     }
   },
   "permissions": [

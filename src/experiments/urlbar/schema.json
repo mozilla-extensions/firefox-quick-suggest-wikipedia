@@ -8,10 +8,6 @@
         "type": "object",
         "description": "Describes a dynamic result type.",
         "properties": {
-          "type": {
-            "type": "string",
-            "description": "The name of the type."
-          },
           "viewTemplate": {
             "type": "object",
             "description": "An object describing the type's view.",
@@ -20,6 +16,12 @@
         }
       }
     ],
+    "properties": {
+      "engagementTelemetry": {
+        "$ref": "types.Setting",
+        "description": "Enables or disables the engagement telemetry for the current browser session."
+      }
+    },
     "events": [
       {
         "name": "onViewUpdateRequested",
@@ -51,14 +53,46 @@
         "name": "addDynamicResultType",
         "type": "function",
         "async": true,
-        "description": "Adds a dynamic result type.",
+        "description": "Adds a dynamic result type. See UrlbarResult.addDynamicResultType().",
         "parameters": [
           {
+            "name": "name",
+            "type": "string",
+            "description": "The name of the result type."
+          },
+          {
             "name": "type",
-            "$ref": "DynamicResultType",
-            "description": "An object describing the result type."
+            "type": "object",
+            "default": {},
+            "description": "The result type. Currently this should be an empty object (which is the default value)."
           }
         ]
+      },
+      {
+        "name": "addDynamicViewTemplate",
+        "type": "function",
+        "async": true,
+        "description": "Adds a view template for a dynamic result type. See UrlbarView.addDynamicViewTemplate().",
+        "parameters": [
+          {
+            "name": "name",
+            "type": "string",
+            "description": "The view template will be registered for the dynamic result type with this name."
+          },
+          {
+            "name": "viewTemplate",
+            "type": "object",
+            "additionalProperties":  true,
+            "description": "The view template."
+          }
+        ]
+      },
+      {
+        "name": "clearInput",
+        "type": "function",
+        "async": true,
+        "description": "Sets urlbar.value to the empty string and the pageproxystate to invalid.",
+        "parameters": []
       }
     ]
   }

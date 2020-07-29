@@ -28,64 +28,64 @@
   margin: 6px;
 }
 
-.dynamicWeather-dayIcon0,
-.dynamicWeather-dayIcon1,
-.dynamicWeather-dayIcon2,
-.dynamicWeather-dayIcon3,
-.dynamicWeather-dayIcon4,
-.dynamicWeather-currentIcon {
+.urlbarView-dynamic-dynamicWeather-dayIcon0,
+.urlbarView-dynamic-dynamicWeather-dayIcon1,
+.urlbarView-dynamic-dynamicWeather-dayIcon2,
+.urlbarView-dynamic-dynamicWeather-dayIcon3,
+.urlbarView-dynamic-dynamicWeather-dayIcon4,
+.urlbarView-dynamic-dynamicWeather-currentIcon {
   -moz-context-properties: stroke;
   stroke: currentColor;
 }
 
-.dynamicWeather-info {
+.urlbarView-dynamic-dynamicWeather-info {
   display: flex;
   flex-direction: column;
   flex: 2;
   margin-inline-end: 12px;
 }
 
-.dynamicWeather-info > .dynamicWeather-location {
+.urlbarView-dynamic-dynamicWeather-info > .urlbarView-dynamic-dynamicWeather-location {
   font-size: 1.5em;
 }
 
-.dynamicWeather-info > .dynamicWeather-provider {
+.urlbarView-dynamic-dynamicWeather-info > .urlbarView-dynamic-dynamicWeather-provider {
   font-size: 0.7em;
   font-style: italic;
 }
 
-.dynamicWeather-current {
+.urlbarView-dynamic-dynamicWeather-current {
   flex: 2;
   display: flex;
   align-items: center;
 }
 
-.dynamicWeather-current > .dynamicWeather-currentIcon {
+.urlbarView-dynamic-dynamicWeather-current > .urlbarView-dynamic-dynamicWeather-currentIcon {
   min-width: 3.5em;
   margin-inline-end: 20px;
 }
 
-.dynamicWeather-current > .dynamicWeather-currentTemperature {
+.urlbarView-dynamic-dynamicWeather-current > .urlbarView-dynamic-dynamicWeather-currentTemperature {
   font-size: 3.5em;
 }
 
-.dynamicWeather-current > .dynamicWeather-currentUnits {
+.urlbarView-dynamic-dynamicWeather-current > .urlbarView-dynamic-dynamicWeather-currentUnits {
   font-size: 1.5em;
   margin-bottom: 0.75em;
 }
 
-.dynamicWeather-daysContainer {
+.urlbarView-dynamic-dynamicWeather-daysContainer {
   flex: 5;
   display: flex;
   justify-content: space-evenly;
   /*! overflow: hidden; */
 }
 
-.dynamicWeather-day0,
-.dynamicWeather-day1,
-.dynamicWeather-day2,
-.dynamicWeather-day3,
-.dynamicWeather-day4 {
+.urlbarView-dynamic-dynamicWeather-day0,
+.urlbarView-dynamic-dynamicWeather-day1,
+.urlbarView-dynamic-dynamicWeather-day2,
+.urlbarView-dynamic-dynamicWeather-day3,
+.urlbarView-dynamic-dynamicWeather-day4 {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -96,29 +96,29 @@
 }
 
 @media screen and (max-width: 700px) {
-  .dynamicWeather-day4 {
+  .urlbarView-dynamic-dynamicWeather-day4 {
     display: none;
   }
 }
 
 @media screen and (max-width: 642px) {
-  .dynamicWeather-day3 {
+  .urlbarView-dynamic-dynamicWeather-day3 {
     display: none;
   }
 }
 
-.dynamicWeather-dayOfWeek0,
-.dynamicWeather-dayOfWeek1,
-.dynamicWeather-dayOfWeek2,
-.dynamicWeather-dayOfWeek3,
-.dynamicWeather-dayOfWeek4 {
+.urlbarView-dynamic-dynamicWeather-dayOfWeek0,
+.urlbarView-dynamic-dynamicWeather-dayOfWeek1,
+.urlbarView-dynamic-dynamicWeather-dayOfWeek2,
+.urlbarView-dynamic-dynamicWeather-dayOfWeek3,
+.urlbarView-dynamic-dynamicWeather-dayOfWeek4 {
   font-size: 1.2em;
 }
 
-dynamicWeather-dayIcon0,
-dynamicWeather-dayIcon1,
-dynamicWeather-dayIcon2,
-dynamicWeather-dayIcon3,
-dynamicWeather-dayIcon4 {
+.urlbarView-dynamic-dynamicWeather-dayIcon0,
+.urlbarView-dynamic-dynamicWeather-dayIcon1,
+.urlbarView-dynamic-dynamicWeather-dayIcon2,
+.urlbarView-dynamic-dynamicWeather-dayIcon3,
+.urlbarView-dynamic-dynamicWeather-dayIcon4 {
   min-width: 2.2em;
 }
