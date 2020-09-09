@@ -1,6 +1,6 @@
 # dynamic-weather-result-extension
 
-Watch a [short demo video](https://imgur.com/a/T81yjxJ).
+Watch a [short demo video](https://imgur.com/a/mykAcB6).
 
 ## Instructions
 1. Clone this repo and install the dependencies.
