@@ -50,49 +50,30 @@
     ],
     "functions": [
       {
-        "name": "addDynamicResultType",
+        "name": "scorePhrase",
         "type": "function",
         "async": true,
-        "description": "Adds a dynamic result type. See UrlbarResult.addDynamicResultType().",
+        "description": "Gets a list of results scored against phrase.",
         "parameters": [
           {
             "name": "name",
             "type": "string",
-            "description": "The name of the result type."
-          },
-          {
-            "name": "type",
-            "type": "object",
-            "default": {},
-            "description": "The result type. Currently this should be an empty object (which is the default value)."
+            "description": "Phrase to score"
           }
         ]
       },
       {
-        "name": "addDynamicViewTemplate",
+        "name": "getResult",
         "type": "function",
         "async": true,
-        "description": "Adds a view template for a dynamic result type. See UrlbarView.addDynamicViewTemplate().",
+        "description": "Get the details of the result",
         "parameters": [
           {
-            "name": "name",
-            "type": "string",
-            "description": "The view template will be registered for the dynamic result type with this name."
-          },
-          {
-            "name": "viewTemplate",
-            "type": "object",
-            "additionalProperties":  true,
-            "description": "The view template."
+            "name": "id",
+            "type": "number",
+            "description": "Id of document"
           }
         ]
-      },
-      {
-        "name": "clearInput",
-        "type": "function",
-        "async": true,
-        "description": "Sets urlbar.value to the empty string and the pageproxystate to invalid.",
-        "parameters": []
       }
     ]
   }
