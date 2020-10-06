@@ -1,31 +1,26 @@
 {
   "manifest_version": 2,
-  "name": "Dynamic Weather Test",
+  "name": "Palm Tree Proof of Concept",
   "version": "1.0a",
-  "description": "Adds a weather forecast item to the Firefox Urlbar.",
   "applications": {
     "gecko": {
-      "id": "urlbar-dynamic-weather@mozilla.org",
+      "id": "pt-test-weather@mozilla.org",
       "strict_min_version": "79.0"
     }
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "urlbar-dynamic-weather@mozilla.org",
+      "id": "pt-test-weather@mozilla.org",
       "strict_min_version": "79"
     }
   },
   "permissions": [
-    "https://api.darksky.net/*",
-    "https://dev.virtualearth.net/*",
-    "geolocation",
     "runtime",
     "urlbar"
   ],
   "background": {
     "scripts": [
       "shim.js",
-      "secret_keys.js",
       "background.js"
     ]
   },

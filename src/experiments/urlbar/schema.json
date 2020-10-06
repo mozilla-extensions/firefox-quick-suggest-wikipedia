@@ -61,19 +61,6 @@
             "description": "Phrase to score"
           }
         ]
-      },
-      {
-        "name": "getResult",
-        "type": "function",
-        "async": true,
-        "description": "Get the details of the result",
-        "parameters": [
-          {
-            "name": "id",
-            "type": "number",
-            "description": "Id of document"
-          }
-        ]
       }
     ]
   }

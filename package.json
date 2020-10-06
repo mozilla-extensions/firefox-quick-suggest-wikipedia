@@ -11,7 +11,12 @@
     "ignoreFiles": [
       "*~"
     ],
-    "sourceDir": "src"
+    "sourceDir": "src",
+    "run": {
+      "pref": [
+        "extensions.experiments.enabled=true"
+      ]
+    }
   },
   "devDependencies": {
     "eslint": "5.16.0",
