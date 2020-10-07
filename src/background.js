@@ -25,14 +25,8 @@ class ProviderDynamicPalmTree extends UrlbarProvider {
   }
 
   async isActive(queryContext) {
-    let results = await api.scorePhrase(queryContext.searchString);
-    if (results[0].score != Infinity) {
-      matchedResult = results[0];
-      return true;
-    }
-
-    matchedResult = null;
-    return false;
+    matchedResult = await api.scorePhrase(queryContext.searchString);
+    return !!matchedResult;
   }
 
   async startQuery(queryContext, addCallback) {
@@ -41,7 +35,7 @@ class ProviderDynamicPalmTree extends UrlbarProvider {
       UrlbarUtils.RESULT_SOURCE.OTHER_NETWORK,
       {
         title: `TripAdvisor - view all "${queryContext.searchString}"`,
-        url: matchedResult.document.id,
+        url: matchedResult.url,
         icon: browser.runtime.getURL("icons/favicon.ico")
       }
     );

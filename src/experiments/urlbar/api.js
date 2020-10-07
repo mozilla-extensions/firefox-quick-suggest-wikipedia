@@ -13,8 +13,6 @@ const { XPCOMUtils } = ChromeUtils.import(
 XPCOMUtils.defineLazyGlobalGetters(this, ["TextDecoder"]);
 
 XPCOMUtils.defineLazyModuleGetters(this, {
-  BrowserWindowTracker: "resource:///modules/BrowserWindowTracker.jsm",
-  OS: "resource://gre/modules/osfile.jsm",
   Preferences: "resource://gre/modules/Preferences.jsm",
   QueryScorer: "resource:///modules/UrlbarProviderInterventions.jsm",
   UrlbarProviderExtension: "resource:///modules/UrlbarProviderExtension.jsm",
@@ -28,25 +26,97 @@ XPCOMUtils.defineLazyGetter(
   () => new Preferences({ defaultBranch: true })
 );
 
-let { EventManager } = ExtensionCommon;
-let queryScorer = new QueryScorer();
-let results = new Map();
+Cu.importGlobalProperties(["fetch"]);
 
-(async function() {
-  let path = "/Users/dale/src/palmtree-result-extension/src/experiments/urlbar/searchterms.csv";
-  let bytes = await OS.File.read(path);
-  let data = new TextDecoder().decode(bytes);
-  data.split("\n").forEach(str => {
-    let keyword = str.substr(0, str.length - 2);
-    queryScorer.addDocument({
-      id: `https://www.tripadvisor.co.uk/Search?q=${keyword}`,
-      phrases: [str.substr(0, str.length - 2)]
-    })
-  });
-})();
+let { EventManager } = ExtensionCommon;
+
+// TODO: Need a window reference to use performance.now I think.
+async function time(fun) {
+  let t0 = Date.now();
+  let res = await fun();
+  let t1 = Date.now();
+  console.log(`fun took ${Date.now() - t0} milliseconds.`);
+  return res;
+}
+
+// Uses the internal firefox QueryScorer used for interventions.
+// which shows for example a restart button when the user searches
+// for "restart firefox". Issues are:
+
+// 1. Matches when user has typed longer than suggestion
+// "to kill a mockingbi" matches the term "mto"
+
+// 2. Doesnt match when a longer keyword match exists
+// "kids" doesnt match because "kids books" does
+
+// 3. Doesnt have much recall
+// "the most fun we ever h" wont match "the most fun we ever had"
+class QueryScorerProvider {
+  qs = new QueryScorer()
+
+  async load({ extension }) {
+    let path = extension.baseURI.resolve("data/data-plain.json");
+    let req = await fetch(path);
+    let data = await req.json();
+    data.forEach(({ term, url }) => {
+      this.qs.addDocument({ id: url, phrases: [term] });
+    });
+  }
+
+  async query(phrase) {
+    let results = this.qs.score(phrase);
+    if (results[0].score != Infinity) {
+      return { url: results[0].document.id };
+    }
+    return null;
+  }
+};
+
+// A super simple in memory mapping of precompiled keywords to result
+// (test data set just uses prefixes).
+
+// 1. Doesnt scale, 5000 results seems reasonable in memory (still trying
+// to determine exact impact). But there is obviously some limit to
+// how many keywords can be added. (TODO: find limit)
+// We can release memory by storing in IndexedDB, but that vastly
+// increases complexity, dealing with updates etc
+class KeywordsProvider {
+  matches = new Map()
+  results = new Map()
+
+  async load({ extension }) {
+    let path = extension.baseURI.resolve("data/data-keywords.json");
+    let req = await fetch(path);
+    let data = await req.json();
+    data.forEach(({ term, url, keywords }) => {
+      keywords.forEach(keyword => this.matches.set(keyword, term));
+      this.matches.set(term, term);
+      this.results.set(term, url);
+    });
+  }
+
+  async query(phrase) {
+    let term = this.matches.get(phrase);
+    if (!term) return null;
+    return { url: this.results.get(term) };
+  }
+};
+
+//let mode = "queryscorer";
+let mode = "keywords";
+
+let loader = {
+  load: async context => time(() => loader[mode].load(context)),
+  query: async phrase => time(() => loader[mode].query(phrase)),
+  queryscorer: new QueryScorerProvider(),
+  keywords: new KeywordsProvider()
+};
 
 this.experiments_urlbar = class extends ExtensionAPI {
   getAPI(context) {
+
+    loader.load(context);
+
     return {
       experiments: {
         urlbar: {
@@ -55,7 +125,7 @@ this.experiments_urlbar = class extends ExtensionAPI {
           },
 
           scorePhrase: (phrase) => {
-            return queryScorer.score(phrase);
+            return loader.query(phrase);
           },
 
           addDynamicViewTemplate: (name, viewTemplate) => {
