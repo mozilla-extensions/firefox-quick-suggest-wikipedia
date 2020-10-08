@@ -136,8 +136,8 @@ async function initAddonTest(addonFilePath, expectedSignedState) {
  *   The expected message.
  */
 async function awaitAddonMessage(msg) {
-  await new Promise(resolve => {
-    let listener = receivedMsg => {
+  await new Promise((resolve) => {
+    let listener = (receivedMsg) => {
       if (receivedMsg.data == msg) {
         Services.ppmm.removeMessageListener(gAddonID, listener);
         resolve();
@@ -169,7 +169,7 @@ async function withStudy(studyPartial, callback) {
       studyPartial
     )
   );
-  await AddonStudies.withStudies([study])(async studies => {
+  await AddonStudies.withStudies([study])(async (studies) => {
     await callback(studies[0]);
   })();
 }
@@ -196,7 +196,7 @@ async function withAddon(callback) {
     gExpectedAddonSignedState === AddonManager.SIGNEDSTATE_MISSING
       ? AddonManager.installTemporaryAddon(gAddonFile)
       : AddonTestUtils.promiseInstallFile(gAddonFile).then(
-          install => install.addon
+          (install) => install.addon
         ),
   ]);
 
@@ -214,7 +214,7 @@ async function withAddon(callback) {
   // unenrollment performed by `withStudy` and can cause database access errors
   // within Normandy.  To avoid that, wait here for the current study to end.
   let studyActive = (await AddonStudies.getAllActive()).some(
-    study => study.addonId == gAddonID
+    (study) => study.addonId == gAddonID
   );
 
   await Promise.all([

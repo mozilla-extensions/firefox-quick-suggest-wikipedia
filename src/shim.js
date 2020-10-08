@@ -4,8 +4,7 @@
 
 "use strict";
 
-class UrlbarProvider {
-}
+class UrlbarProvider {}
 
 class UrlbarResult {
   constructor(resultType, resultSource, payload) {
@@ -66,10 +65,10 @@ async function addProvider(provider) {
     async onResultPicked(payload) {
       await this.pickResult({ payload });
     },
-//     async onEngagement(state) {
-//       let isPrivate = false; //XXXadw
-//       await this.onEngagement(isPrivate, state);
-//     },
+    //     async onEngagement(state) {
+    //       let isPrivate = false; //XXXadw
+    //       await this.onEngagement(isPrivate, state);
+    //     },
     async onQueryCanceled(query) {
       await this.cancelQuery(query);
     },
