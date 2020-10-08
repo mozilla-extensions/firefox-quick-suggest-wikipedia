@@ -50,15 +50,15 @@
     ],
     "functions": [
       {
-        "name": "scorePhrase",
+        "name": "matchSearchTerm",
         "type": "function",
         "async": true,
-        "description": "Gets a list of results scored against phrase.",
+        "description": "Queries to see if there are any matches for a given search term.",
         "parameters": [
           {
-            "name": "name",
+            "name": "searchTerm",
             "type": "string",
-            "description": "Phrase to score"
+            "description": "Search term to match"
           }
         ]
       }

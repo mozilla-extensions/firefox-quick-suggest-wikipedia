@@ -25,7 +25,7 @@ class ProviderDynamicPalmTree extends UrlbarProvider {
   }
 
   async isActive(queryContext) {
-    matchedResult = await api.scorePhrase(queryContext.searchString);
+    matchedResult = await api.matchSearchTerm(queryContext.searchString);
     return !!matchedResult;
   }
 
