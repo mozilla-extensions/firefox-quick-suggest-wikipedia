@@ -16,12 +16,6 @@
         }
       }
     ],
-    "properties": {
-      "engagementTelemetry": {
-        "$ref": "types.Setting",
-        "description": "Enables or disables the engagement telemetry for the current browser session."
-      }
-    },
     "events": [
       {
         "name": "onViewUpdateRequested",

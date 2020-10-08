@@ -4,7 +4,61 @@
 
 "use strict";
 
-class UrlbarProvider {}
+const providerEvents = [
+  "onBehaviorRequested",
+  "onResultsRequested",
+  "onViewUpdateRequested",
+  "onResultPicked",
+  "onQueryCanceled",
+];
+
+class UrlbarProvider {
+  constructor(name) {
+    for (let event of providerEvents) {
+      this[event] = this[event].bind(this);
+      (browser.urlbar[event] || browser.experiments.urlbar[event]).addListener(
+        this[event],
+        this.name
+      );
+    }
+  }
+
+  removeListeners() {
+    for (let event of providerEvents) {
+      (
+        browser.urlbar[event] || browser.experiments.urlbar[event]
+      ).removeListener(this[event], this.name);
+    }
+  }
+
+  async onBehaviorRequested(query) {
+    if (!(await this.isActive(query))) {
+      return "inactive";
+    }
+    if ((await this.getPriority(query)) > 0) {
+      return "restricting";
+    }
+    return "active";
+  }
+
+  async onResultsRequested(query) {
+    let results = [];
+    await this.startQuery(query, (p, result) => results.push(result));
+    return results;
+  }
+
+  async onViewUpdateRequested(payload) {
+    return this.getViewUpdate({ payload });
+  }
+
+  async onResultPicked(payload) {
+    await this.pickResult({ payload });
+  }
+
+  async onQueryCanceled(query) {
+    await this.cancelQuery(query);
+  }
+}
 
 class UrlbarResult {
   constructor(resultType, resultSource, payload) {
@@ -42,46 +96,3 @@ let UrlbarUtils = {
     OTHER_NETWORK: "network",
   },
 };
-
-async function addProvider(provider) {
-  let listeners = {
-    async onBehaviorRequested(query) {
-      if (!(await this.isActive(query))) {
-        return "inactive";
-      }
-      if ((await this.getPriority(query)) > 0) {
-        return "restricting";
-      }
-      return "active";
-    },
-    async onResultsRequested(query) {
-      let results = [];
-      await this.startQuery(query, (p, result) => results.push(result));
-      return results;
-    },
-    async onViewUpdateRequested(payload) {
-      return this.getViewUpdate({ payload });
-    },
-    async onResultPicked(payload) {
-      await this.pickResult({ payload });
-    },
-    //     async onEngagement(state) {
-    //       let isPrivate = false; //XXXadw
-    //       await this.onEngagement(isPrivate, state);
-    //     },
-    async onQueryCanceled(query) {
-      await this.cancelQuery(query);
-    },
-  };
-
-  provider = Object.assign(provider, listeners);
-
-  for (let listenerName in listeners) {
-    let listenerObj =
-      browser.urlbar[listenerName] || browser.experiments.urlbar[listenerName];
-    await listenerObj.addListener(
-      provider[listenerName].bind(provider),
-      provider.name
-    );
-  }
-}
