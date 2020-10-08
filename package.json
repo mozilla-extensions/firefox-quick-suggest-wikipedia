@@ -1,7 +1,7 @@
 {
   "name": "dynamic-result-type-extension",
-  "version": "1.0a",
   "description": "An example extension for dynamic result types.",
+  "repository": "https://github.com/daleharvey/palmtree-result-extension",
   "private": true,
   "license": "MPLv2",
   "webExt": {
@@ -18,14 +18,26 @@
       ]
     }
   },
+  "dependencies": {
+    "web-ext": "5.2.0"
+  },
   "devDependencies": {
-    "eslint": "5.16.0",
-    "eslint-config-prettier": "4.2.0",
+    "eslint": "7.10.0",
+    "eslint-config-prettier": "6.12.0",
     "eslint-plugin-fetch-options": "0.0.5",
-    "eslint-plugin-html": "5.0.3",
-    "eslint-plugin-mozilla": "^2",
-    "eslint-plugin-no-unsanitized": "3.0.2",
-    "eslint-plugin-prettier": "3.0.1",
-    "prettier": "1.17.0"
+    "eslint-plugin-html": "6.1.0",
+    "eslint-plugin-mozilla": "2.8.0",
+    "eslint-plugin-no-unsanitized": "3.1.4",
+    "eslint-plugin-prettier": "3.1.4",
+    "prettier": "2.1.2",
+    "rimraf": "3.0.2"
+  },
+  "scripts": {
+    "test": "eslint . && web-ext lint",
+    "build": "npm-run-all clean build:extension build:finalize",
+    "build:extension": "web-ext build",
+    "build:finalize": "mv web-ext-artifacts/*.zip web-ext-artifacts/searchengine-devtools.xpi",
+    "clean": "rimraf web-ext-artifacts",
+    "start": "web-ext run --firefox=nightly"
   }
 }

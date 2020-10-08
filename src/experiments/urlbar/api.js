@@ -30,7 +30,6 @@ let { EventManager } = ExtensionCommon;
 async function time(fun) {
   let t0 = Date.now();
   let res = await fun();
-  let t1 = Date.now();
   console.log(`fun took ${Date.now() - t0} milliseconds.`);
   return res;
 }
@@ -48,7 +47,9 @@ async function time(fun) {
 // 3. Doesnt have much recall
 // "the most fun we ever h" wont match "the most fun we ever had"
 class QueryScorerProvider {
-  qs = new QueryScorer()
+  constructor() {
+    this.qs = new QueryScorer();
+  }
 
   async load({ extension }) {
     let path = extension.baseURI.resolve("data/data-plain.json");
@@ -66,7 +67,7 @@ class QueryScorerProvider {
     }
     return null;
   }
-};
+}
 
 // A super simple in memory mapping of precompiled keywords to result
 // (test data set just uses prefixes).
@@ -77,15 +78,17 @@ class QueryScorerProvider {
 // We can release memory by storing in IndexedDB, but that vastly
 // increases complexity, dealing with updates etc
 class KeywordsProvider {
-  matches = new Map()
-  results = new Map()
+  constructor() {
+    this.matches = new Map();
+    this.results = new Map();
+  }
 
   async load({ extension }) {
     let path = extension.baseURI.resolve("data/data-keywords.json");
     let req = await fetch(path);
     let data = await req.json();
     data.forEach(({ term, url, keywords }) => {
-      keywords.forEach(keyword => this.matches.set(keyword, term));
+      keywords.forEach((keyword) => this.matches.set(keyword, term));
       this.matches.set(term, term);
       this.results.set(term, url);
     });
@@ -93,24 +96,25 @@ class KeywordsProvider {
 
   async query(phrase) {
     let term = this.matches.get(phrase);
-    if (!term) return null;
+    if (!term) {
+      return null;
+    }
     return { url: this.results.get(term) };
   }
-};
+}
 
 //let mode = "queryscorer";
 let mode = "keywords";
 
 let loader = {
-  load: async context => time(() => loader[mode].load(context)),
-  query: async phrase => time(() => loader[mode].query(phrase)),
+  load: async (context) => time(() => loader[mode].load(context)),
+  query: async (phrase) => time(() => loader[mode].query(phrase)),
   queryscorer: new QueryScorerProvider(),
-  keywords: new KeywordsProvider()
+  keywords: new KeywordsProvider(),
 };
 
 this.experiments_urlbar = class extends ExtensionAPI {
   getAPI(context) {
-
     // Do the initial loading of data, probably a better place for this?
     loader.load(context);
 
@@ -125,8 +129,8 @@ this.experiments_urlbar = class extends ExtensionAPI {
             name: "experiments.urlbar.onViewUpdateRequested",
             register: (fire, providerName) => {
               let provider = UrlbarProviderExtension.getOrCreate(providerName);
-              provider.setEventListener("getViewUpdate", result => {
-                return fire.async(result.payload).catch(error => {
+              provider.setEventListener("getViewUpdate", (result) => {
+                return fire.async(result.payload).catch((error) => {
                   throw context.normalizeError(error);
                 });
               });

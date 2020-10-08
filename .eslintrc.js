@@ -1,30 +1,30 @@
+/* eslint-env node */
+
 "use strict";
 
-const browserTestConfig = require(
-  "eslint-plugin-mozilla/lib/configs/browser-test.js"
-);
+const browserTestConfig = require("eslint-plugin-mozilla/lib/configs/browser-test.js");
 
 module.exports = {
   extends: [
-    "plugin:mozilla/recommended"
+    "eslint:recommended",
+    "plugin:prettier/recommended",
+    "plugin:mozilla/recommended",
   ],
-  plugins: [
-    "mozilla"
-  ],
+  parserOptions: {
+    ecmaVersion: 12,
+  },
+  plugins: ["mozilla"],
   overrides: [
     {
-      files: [
-        "src/background.js",
-      ],
-      globals: {
-        "browser": true,
+      files: ["src/*.js"],
+      env: {
+        browser: false,
+        webextensions: true,
       },
     },
     // Copied and modified from mozilla-central/.eslintrc.js
     {
-      "files": [
-        "tests/**/browser/**",
-      ],
+      files: ["tests/**/browser/**"],
       ...browserTestConfig,
     },
   ],

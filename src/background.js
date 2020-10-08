@@ -4,6 +4,8 @@
 
 "use strict";
 
+/* import-globals-from shim.js */
+
 const URLBAR_PROVIDER_NAME = "pt-result";
 const DYNAMIC_TYPE_NAME = "dynamicPtResult";
 
@@ -36,7 +38,7 @@ class ProviderDynamicPalmTree extends UrlbarProvider {
       {
         title: `TripAdvisor - view all "${queryContext.searchString}"`,
         url: matchedResult.url,
-        icon: browser.runtime.getURL("icons/favicon.ico")
+        icon: browser.runtime.getURL("icons/favicon.ico"),
       }
     );
     result.suggestedIndex = 1;
