@@ -16,6 +16,16 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   UrlbarProviderExtension: "resource:///modules/UrlbarProviderExtension.jsm",
 });
 
+let { ExtensionParent } = ChromeUtils.import(
+  "resource://gre/modules/ExtensionParent.jsm"
+);
+let extension = ExtensionParent.GlobalManager.getExtension(
+  "pt-test@mozilla.org"
+);
+let { Trie } = ChromeUtils.import(
+  extension.rootURI.resolve("experiments/urlbar/mozTrie.jsm")
+);
+
 XPCOMUtils.defineLazyGetter(
   this,
   "defaultPreferences",
@@ -103,14 +113,41 @@ class KeywordsProvider {
   }
 }
 
+class TrieProvider {
+  constructor() {
+    this.trie = new Trie();
+    this.results = new Map();
+  }
+  async load({ extension }) {
+    let path = extension.baseURI.resolve("data/data-keywords.json");
+    let req = await fetch(path);
+    let data = await req.json();
+    data.forEach(({ term, url, keywords }) => {
+      keywords.forEach((keyword) => this.trie.add(keyword, { term }));
+      this.trie.add(term, { term });
+      this.results.set(term, url);
+    });
+  }
+
+  async query(phrase) {
+    let results = this.trie.find(phrase);
+    if (!results) {
+      return null;
+    }
+    return { url: this.results.get(results.meta[0].term) };
+  }
+}
+
 //let mode = "queryscorer";
-let mode = "keywords";
+//let mode = "keywords";
+let mode = "trie";
 
 let loader = {
   load: async (context) => time(() => loader[mode].load(context)),
   query: async (phrase) => time(() => loader[mode].query(phrase)),
   queryscorer: new QueryScorerProvider(),
   keywords: new KeywordsProvider(),
+  trie: new TrieProvider(),
 };
 
 this.experiments_urlbar = class extends ExtensionAPI {
