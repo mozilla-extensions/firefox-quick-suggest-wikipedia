@@ -19,11 +19,13 @@ XPCOMUtils.defineLazyModuleGetters(this, {
 let { ExtensionParent } = ChromeUtils.import(
   "resource://gre/modules/ExtensionParent.jsm"
 );
-let extension = ExtensionParent.GlobalManager.getExtension(
-  "pt-test@mozilla.org"
-);
+
+let ext = ExtensionParent.GlobalManager.getExtension("pt-test@mozilla.org");
 let { Trie } = ChromeUtils.import(
-  extension.rootURI.resolve("experiments/urlbar/mozTrie.jsm")
+  ext.rootURI.resolve("experiments/urlbar/mozTrie.jsm")
+);
+let { KeywordTree } = ChromeUtils.import(
+  ext.rootURI.resolve("experiments/urlbar/keywordTree.jsm")
 );
 
 XPCOMUtils.defineLazyGetter(
@@ -44,6 +46,12 @@ async function time(fun) {
   return res;
 }
 
+async function fetchJSON(extension, path) {
+  let fullPath = extension.baseURI.resolve(path);
+  let req = await fetch(fullPath);
+  return req.json();
+}
+
 // Uses the internal firefox QueryScorer used for interventions.
 // which shows for example a restart button when the user searches
 // for "restart firefox". Issues are:
@@ -62,9 +70,7 @@ class QueryScorerProvider {
   }
 
   async load({ extension }) {
-    let path = extension.baseURI.resolve("data/data-plain.json");
-    let req = await fetch(path);
-    let data = await req.json();
+    let data = await fetchJSON(extension, "data/data-plain.json");
     data.forEach(({ term, url }) => {
       this.qs.addDocument({ id: url, phrases: [term] });
     });
@@ -94,9 +100,7 @@ class KeywordsProvider {
   }
 
   async load({ extension }) {
-    let path = extension.baseURI.resolve("data/data-keywords.json");
-    let req = await fetch(path);
-    let data = await req.json();
+    let data = await fetchJSON(extension, "data/data-keywords.json");
     data.forEach(({ term, url, keywords }) => {
       keywords.forEach((keyword) => this.matches.set(keyword, term));
       this.matches.set(term, term);
@@ -113,15 +117,18 @@ class KeywordsProvider {
   }
 }
 
+// Using Mike De Boers mozTrie implementation, this works perfectly
+// fast however does a prefix search on keywords, If we were to
+// follow this type of path we would need to embed logic in the
+// client on how to disambiguiate matching keywords, for example:
+// "green trousers" vs "green shirts"
 class TrieProvider {
   constructor() {
     this.trie = new Trie();
     this.results = new Map();
   }
   async load({ extension }) {
-    let path = extension.baseURI.resolve("data/data-keywords.json");
-    let req = await fetch(path);
-    let data = await req.json();
+    let data = await fetchJSON(extension, "data/data-keywords.json");
     data.forEach(({ term, url, keywords }) => {
       keywords.forEach((keyword) => this.trie.add(keyword, { term }));
       this.trie.add(term, { term });
@@ -138,9 +145,43 @@ class TrieProvider {
   }
 }
 
+// This is equivalent functionally to the KeywordsProvider
+// but stores the keywords in a tree for more efficient memory
+// usage, one possible improvement would be to allow > 1 character
+// keys, in the case of 2 keywords, "hello foo" and "hello bar" we
+// will currently split that into nested keys:
+//   "h" > "e" > "l" > "l" > "o"
+// whereas we could have ["hello ", ["foo", "bar"]]
+// However would be very dependent on the data whether that
+// would be much of an improvement and certainly not needed for
+// ~5000 results
+class KeywordTreeProvider {
+  constructor() {
+    this.tree = new KeywordTree();
+    this.results = new Map();
+  }
+  async load({ extension }) {
+    let data = await fetchJSON(extension, "data/data-keywords.json");
+    data.forEach(({ term, url, keywords }, i) => {
+      keywords.forEach((keyword) => this.tree.set(keyword, term));
+      this.tree.set(term, term);
+      this.results.set(term, url);
+    });
+  }
+
+  async query(phrase) {
+    let term = this.tree.get(phrase);
+    if (!term) {
+      return null;
+    }
+    return { url: this.results.get(term) };
+  }
+}
+
 //let mode = "queryscorer";
 //let mode = "keywords";
-let mode = "trie";
+//let mode = "trie";
+let mode = "keywordtree";
 
 let loader = {
   load: async (context) => time(() => loader[mode].load(context)),
@@ -148,6 +189,7 @@ let loader = {
   queryscorer: new QueryScorerProvider(),
   keywords: new KeywordsProvider(),
   trie: new TrieProvider(),
+  keywordtree: new KeywordTreeProvider(),
 };
 
 this.experiments_urlbar = class extends ExtensionAPI {
