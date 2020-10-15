@@ -15,7 +15,6 @@ const URLBAR_PROVIDER_NAME = "ProviderDynamicPalmTree";
 const DYNAMIC_TYPE_NAME = "dynamicPtResult";
 
 let api = browser.experiments.urlbar;
-let matchedResult = null;
 let testProvider = null;
 
 // Our provider.
@@ -23,6 +22,9 @@ class ProviderDynamicPalmTree extends UrlbarProvider {
   constructor() {
     super();
     this._resultReturned = false;
+    // Store the result from the urlbar provider so we can
+    // share between isActive and startQuery.
+    this.matchedResult = null;
   }
 
   get name() {
@@ -34,19 +36,18 @@ class ProviderDynamicPalmTree extends UrlbarProvider {
   }
 
   async isActive(queryContext) {
-    matchedResult = await api.matchSearchTerm(queryContext.searchString);
-    return !!matchedResult;
+    this.matchedResult = await api.matchSearchTerm(queryContext.searchString);
+    return !!this.matchedResult;
   }
 
   async startQuery(queryContext, addCallback) {
+    if (!this.matchedResult) {
+      return;
+    }
     let result = new UrlbarResult(
       UrlbarUtils.RESULT_TYPE.URL,
       UrlbarUtils.RESULT_SOURCE.OTHER_NETWORK,
-      {
-        title: `TripAdvisor - view all "${queryContext.searchString}"`,
-        url: matchedResult.url,
-        icon: browser.runtime.getURL("icons/favicon.ico"),
-      }
+      this.matchedResult
     );
     result.suggestedIndex = 1;
     addCallback(this, result);
@@ -136,8 +137,8 @@ async function enroll(isTreatmentBranch) {
   // branch if we're a temporary add-on.  onInstalled with details.temporary =
   // true will be fired in that case.  Add the listener now before awaiting the
   // study below to make sure we don't miss the event.
-  let installPromise = new Promise((resolve) => {
-    browser.runtime.onInstalled.addListener((details) => {
+  let installPromise = new Promise(resolve => {
+    browser.runtime.onInstalled.addListener(details => {
       resolve(details.temporary);
     });
   });
@@ -155,7 +156,7 @@ async function enroll(isTreatmentBranch) {
 
   // There's no study.  If installation happens, then continue with the
   // development convenience described above.
-  installPromise.then(async (isTemporaryInstall) => {
+  installPromise.then(async isTemporaryInstall => {
     if (isTemporaryInstall) {
       console.debug("isTemporaryInstall");
       await enroll(true);

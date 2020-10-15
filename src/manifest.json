@@ -28,11 +28,11 @@
   "incognito": "spanning",
   "experiment_apis": {
     "experiments_urlbar": {
-      "schema": "experiments/urlbar/schema.json",
+      "schema": "schema.json",
       "parent": {
         "scopes": ["addon_parent"],
         "paths": [["experiments", "urlbar"]],
-        "script": "experiments/urlbar/api.js"
+        "script": "api.js"
       }
     }
   }

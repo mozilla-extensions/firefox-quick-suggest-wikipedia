@@ -13,6 +13,7 @@ const providerEvents = [
   "onEngagement",
 ];
 
+// eslint-disable-next-line no-unused-vars
 class UrlbarProvider {
   constructor(name) {
     for (let event of providerEvents) {
@@ -65,6 +66,7 @@ class UrlbarProvider {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 class UrlbarResult {
   constructor(resultType, resultSource, payload) {
     this.type = resultType;
@@ -77,12 +79,14 @@ class UrlbarResult {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 class UrlbarView {
   static addDynamicViewTemplate(name, viewTemplate) {
     browser.experiments.urlbar.addDynamicViewTemplate(name, viewTemplate);
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 let UrlbarUtils = {
   RESULT_TYPE: {
     TAB_SWITCH: "tab",

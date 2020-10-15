@@ -1,5 +1,7 @@
 # .gitignore - List of filenames git should ignore
 
+public
+
 # Filenames that should be ignored wherever they appear
 *~
 *.pyc
