@@ -11,7 +11,7 @@ const BRANCHES = {
   TREATMENT: "treatment",
 };
 
-const URLBAR_PROVIDER_NAME = "pt-result";
+const URLBAR_PROVIDER_NAME = "ProviderDynamicPalmTree";
 const DYNAMIC_TYPE_NAME = "dynamicPtResult";
 
 let api = browser.experiments.urlbar;
@@ -22,10 +22,11 @@ let testProvider = null;
 class ProviderDynamicPalmTree extends UrlbarProvider {
   constructor() {
     super();
+    this._resultReturned = false;
   }
 
   get name() {
-    return "ProviderDynamicPalmTree";
+    return URLBAR_PROVIDER_NAME;
   }
 
   getPriority(queryContext) {
@@ -49,12 +50,28 @@ class ProviderDynamicPalmTree extends UrlbarProvider {
     );
     result.suggestedIndex = 1;
     addCallback(this, result);
+    this._resultReturned = true;
   }
 
   cancelQuery(queryContext) {}
 
   pickResult(result) {
     console.log("Result picked!", result);
+  }
+
+  handleEngagement(state) {
+    if (state == "start") {
+      this._resultReturned = false;
+      return;
+    }
+
+    if (["engagement", "abandonment"].includes(state) && this._resultReturned) {
+      browser.telemetry.keyedScalarAdd(
+        "browser.search.experiments.impressions",
+        URLBAR_PROVIDER_NAME,
+        1
+      );
+    }
   }
 }
 
@@ -98,6 +115,15 @@ async function enroll(isTreatmentBranch) {
   await browser.urlbar.engagementTelemetry.set({ value: true });
 
   if (isTreatmentBranch) {
+    // Add our specific scalars.
+    await browser.telemetry.registerScalars("browser.search.experiments", {
+      impressions: {
+        keyed: true,
+        kind: browser.telemetry.ScalarType.COUNT,
+        record_on_release: true,
+      },
+    });
+
     // Enable our provider.
     testProvider = new ProviderDynamicPalmTree();
   }

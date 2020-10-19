@@ -10,6 +10,7 @@ const providerEvents = [
   "onViewUpdateRequested",
   "onResultPicked",
   "onQueryCanceled",
+  "onEngagement",
 ];
 
 class UrlbarProvider {
@@ -57,6 +58,10 @@ class UrlbarProvider {
 
   async onQueryCanceled(query) {
     await this.cancelQuery(query);
+  }
+
+  async onEngagement(state) {
+    await this.handleEngagement(state);
   }
 }
 

@@ -16,7 +16,8 @@
   },
   "permissions": [
     "normandyAddonStudy",
-    "urlbar"
+    "urlbar",
+    "telemetry"
   ],
   "background": {
     "scripts": [
