@@ -66,7 +66,6 @@ Object.defineProperty(this, "gAddonVersion", {
 async function initAddonTest(addonFilePath, expectedSignedState) {
   gAddonFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
   gAddonFile.initWithPath(getTestFilePath(addonFilePath));
-
   // Load the add-on's manifest.  We'll get all the metadata from it so that
   // tests don't need to repeat it.
   let manifestURI = AddonTestUtils.getManifestURI(gAddonFile);

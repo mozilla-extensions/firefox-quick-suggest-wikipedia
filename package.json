@@ -32,6 +32,7 @@
     "eslint-plugin-mozilla": "2.8.0",
     "eslint-plugin-no-unsanitized": "3.1.4",
     "eslint-plugin-prettier": "3.1.4",
+    "npm-run-all": "^4.1.5",
     "prettier": "1.19.1",
     "rimraf": "3.0.2",
     "rollup": "2.30.0",
@@ -41,11 +42,12 @@
   "scripts": {
     "test": "eslint ./src ./tests && web-ext lint",
     "test:unit": "mocha ./tests/unit/",
+    "test:browser": "./scripts/run-browser-tests.sh",
     "rollup": "rollup -c rollup.config.addon.js",
     "watch": "watch 'npm run rollup' ./src --wait=1 --interval=1",
-    "build": "npm-run-all clean build:extension build:finalize",
+    "build": "npm-run-all clean rollup build:extension build:finalize",
     "build:extension": "web-ext build",
-    "build:finalize": "mv web-ext-artifacts/*.zip web-ext-artifacts/searchengine-devtools.xpi",
+    "build:finalize": "mv web-ext-artifacts/*.zip web-ext-artifacts/palmtree.xpi",
     "clean": "rimraf web-ext-artifacts",
     "start": "web-ext run --firefox=nightly --bc"
   }

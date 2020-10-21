@@ -12,7 +12,6 @@ const BRANCHES = {
 };
 
 const URLBAR_PROVIDER_NAME = "ProviderDynamicPalmTree";
-const DYNAMIC_TYPE_NAME = "dynamicPtResult";
 
 let api = browser.experiments.urlbar;
 let testProvider = null;
