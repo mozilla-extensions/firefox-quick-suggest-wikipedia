@@ -6,8 +6,10 @@ then
     exit
 fi
 
+npm run build:dist
+
 cp -R tests/moz.build $GECKO_PATH/testing/extensions/moz.build
-cp web-ext-artifacts/palmtree.xpi $GECKO_PATH/testing/extensions/browser/
+cp web-ext-artifacts/*.xpi $GECKO_PATH/testing/extensions/browser/
 cp -R tests/browser/ $GECKO_PATH/testing/extensions/browser/
 
 cd $GECKO_PATH

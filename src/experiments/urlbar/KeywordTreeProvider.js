@@ -8,6 +8,9 @@ import KeywordTree from "./KeywordTree.js";
 
 Cu.importGlobalProperties(["fetch"]);
 
+const SUGGESTIONS_PATH = "data/suggestions.json";
+const ICON_PATH = "icons/favicon.ico";
+
 class KeywordTreeProvider {
   constructor() {
     this.tree = new KeywordTree();
@@ -17,15 +20,11 @@ class KeywordTreeProvider {
   }
 
   async load({ extension }) {
-    let data = await KeywordTreeProvider.fetchJSON(
-      extension,
-      "data/data-processed-50000.json"
-    );
-
+    let data = await KeywordTreeProvider.fetchJSON(extension, SUGGESTIONS_PATH);
     this.title = data.title;
     this.results = data.records;
     this.tree.fromJSON(data.tree);
-    this.iconPath = extension.baseURI.resolve("icons/favicon.ico");
+    this.iconPath = extension.baseURI.resolve(ICON_PATH);
   }
 
   async query(phrase) {

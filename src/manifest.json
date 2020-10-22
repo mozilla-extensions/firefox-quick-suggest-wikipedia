@@ -1,16 +1,16 @@
 {
   "manifest_version": 2,
-  "name": "Palm Tree Proof of Concept",
+  "name": "QuickSuggest",
   "version": "1.0",
   "applications": {
     "gecko": {
-      "id": "pt-test@mozilla.org",
+      "id": "qs-experiment@mozilla.org",
       "strict_min_version": "79.0"
     }
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "pt-test@mozilla.org",
+      "id": "qs-experiment@mozilla.org",
       "strict_min_version": "79.0"
     }
   },

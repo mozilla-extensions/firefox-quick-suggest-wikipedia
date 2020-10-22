@@ -1,7 +1,7 @@
 {
-  "name": "dynamic-result-type-extension",
-  "description": "An example extension for dynamic result types.",
-  "repository": "https://github.com/daleharvey/palmtree-result-extension",
+  "name": "quick-suggest-extension",
+  "description": "WebExtension used for Firefox Quick Suggest experiments",
+  "repository": "https://github.com/daleharvey/quick-suggest-extension",
   "private": true,
   "license": "MPLv2",
   "type": "module",
@@ -13,15 +13,9 @@
       "data/",
       "*~"
     ],
-    "sourceDir": "public/addon-build",
-    "run": {
-      "pref": [
-        "extensions.experiments.enabled=true"
-      ]
-    }
+    "sourceDir": "public/addon-build"
   },
   "dependencies": {
-    "mocha": "^8.1.3",
     "web-ext": "5.2.0"
   },
   "devDependencies": {
@@ -32,23 +26,22 @@
     "eslint-plugin-mozilla": "2.8.0",
     "eslint-plugin-no-unsanitized": "3.1.4",
     "eslint-plugin-prettier": "3.1.4",
+    "mocha": "^8.1.3",
     "npm-run-all": "^4.1.5",
     "prettier": "1.19.1",
     "rimraf": "3.0.2",
     "rollup": "2.30.0",
-    "rollup-plugin-copy": "3.3.0",
-    "watch": "1.0.2"
+    "rollup-plugin-copy": "3.3.0"
   },
   "scripts": {
-    "test": "eslint ./src ./tests && web-ext lint",
+    "lint": "eslint ./src ./tests && web-ext lint",
     "test:unit": "mocha ./tests/unit/",
     "test:browser": "./scripts/run-browser-tests.sh",
-    "rollup": "rollup -c rollup.config.addon.js",
-    "watch": "watch 'npm run rollup' ./src --wait=1 --interval=1",
-    "build": "npm-run-all clean rollup build:extension build:finalize",
-    "build:extension": "web-ext build",
-    "build:finalize": "mv web-ext-artifacts/*.zip web-ext-artifacts/palmtree.xpi",
-    "clean": "rimraf web-ext-artifacts",
-    "start": "web-ext run --firefox=nightly --bc"
+    "build": "./scripts/build-addon.js",
+    "build:zip": "web-ext build",
+    "build:finalize": "mv web-ext-artifacts/*.zip web-ext-artifacts/quicksuggest.xpi",
+    "build:dist": "npm-run-all clean build build:zip build:finalize",
+    "clean": "rimraf web-ext-artifacts public",
+    "start": "./scripts/build-addon.js watch"
   }
 }
