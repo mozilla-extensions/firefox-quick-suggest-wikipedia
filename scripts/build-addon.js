@@ -42,24 +42,32 @@ async function _build() {
 }
 
 async function _watch() {
-  let extensionRunner = await webExt.cmd.run({
-    firefox: "nightly",
-    sourceDir: `${process.env.PWD}/${OUTDIR}/`,
-    noInput: true,
-    noReload: true,
-    browserConsole: true,
-    pref: { "extensions.experiments.enabled" : true }
-  });
+  let extensionRunner;
   inputOptions.output = outputOptions;
   let watcher = watch(inputOptions);
-  watcher.on("event", (event, err) => {
+  watcher.on("event", async (event, err) => {
     if (event.code === "ERROR") {
       console.error(event.error);
-      process.exit();
     }
     if (event.code === "END") {
+      if (!extensionRunner) {
+        extensionRunner = await webExt.cmd.run({
+         firefox: "nightly",
+         sourceDir: `${process.env.PWD}/${OUTDIR}/`,
+         noInput: true,
+         noReload: true,
+         browserConsole: true,
+         pref: { "extensions.experiments.enabled" : true }
+       });
+      }
       extensionRunner.reloadAllExtensions();
     }
+  });
+  process.on('SIGINT', function() {
+    if (extensionRunner) {
+      extensionRunner.exit();
+    }
+    process.exit();
   });
 }
 

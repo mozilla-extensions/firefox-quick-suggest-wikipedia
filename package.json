@@ -10,7 +10,6 @@
       "overwriteDest": true
     },
     "ignoreFiles": [
-      "data/",
       "*~"
     ],
     "sourceDir": "public/addon-build"

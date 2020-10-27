@@ -6,7 +6,10 @@ then
     exit
 fi
 
-npm run build:dist
+
+node ./scripts/build-test-data.js
+
+DATA_FILE=./data/data-test.json npm run build:dist
 
 cp -R tests/moz.build $GECKO_PATH/testing/extensions/moz.build
 cp web-ext-artifacts/*.xpi $GECKO_PATH/testing/extensions/browser/
@@ -14,4 +17,5 @@ cp -R tests/browser/ $GECKO_PATH/testing/extensions/browser/
 
 cd $GECKO_PATH
 
+./mach build
 ./mach mochitest -f browser testing/extensions/browser/browser_test.js
