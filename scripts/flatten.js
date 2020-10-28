@@ -7,7 +7,9 @@ let json = JSON.parse(data);
 
 let tree = new KeywordTree();
 let doc = {
-  title: "QuickSuggest - view all \"%s\"",
+  options: {
+    title: "QuickSuggest - view all \"%s\""
+  },
   records: {}
 };
 

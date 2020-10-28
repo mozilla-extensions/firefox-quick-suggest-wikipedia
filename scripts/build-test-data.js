@@ -13,7 +13,9 @@ const TEST_VISIT_URL = "http://mochi.test:8888/browser/testing/extensions/browse
 
 let tree = new KeywordTree();
 let doc = {
-  title: "QuickSuggest Test - view all \"%s\"",
+  options: {
+    title: "QuickSuggest Test - view all \"%s\""
+  },
   records: {}
 };
 

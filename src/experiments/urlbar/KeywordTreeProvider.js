@@ -9,13 +9,15 @@ import KeywordTree from "./KeywordTree.js";
 Cu.importGlobalProperties(["fetch"]);
 
 const SUGGESTIONS_PATH = "data/suggestions.json";
-const ICON_PATH = "icons/favicon.ico";
+
+const DEFAULT_TITLE = 'View "%s"';
+const DEFAULT_ICON = "icons/default.svg";
 
 class KeywordTreeProvider {
   constructor() {
     this.tree = new KeywordTree();
     this.results = new Map();
-    this.iconPath = null;
+    this.icon = null;
     this.title = "";
   }
 
@@ -24,7 +26,10 @@ class KeywordTreeProvider {
     this.title = data.title;
     this.results = data.records;
     this.tree.fromJSON(data.tree);
-    this.iconPath = extension.baseURI.resolve(ICON_PATH);
+
+    this.title = data.options.title ?? DEFAULT_TITLE;
+    this.icon =
+      data.options.icon ?? extension.baseURI.resolve.resolve(DEFAULT_ICON);
   }
 
   async query(phrase) {
@@ -36,7 +41,7 @@ class KeywordTreeProvider {
     return {
       title: this.title.replace("%s", result.term),
       url: result.url,
-      icon: this.iconPath,
+      icon: this.icon,
     };
   }
 
