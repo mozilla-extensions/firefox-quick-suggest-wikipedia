@@ -42,7 +42,7 @@ class KeywordTreeProvider {
     return {
       title: title.replace("%s", result.term),
       url: result.url,
-      icon: this.icon,
+      icon: result.icon || this.icon,
     };
   }
 
