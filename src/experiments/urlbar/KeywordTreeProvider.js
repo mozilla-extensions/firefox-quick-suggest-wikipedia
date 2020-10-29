@@ -40,7 +40,7 @@ class KeywordTreeProvider {
     let result = this.results[index];
     let title = result.title || this.title;
     let d = new Date();
-    let date = `${d.getFullYear()}${d.getMonth() + 1}${d.getDate()}`;
+    let date = `${d.getFullYear()}${d.getMonth() + 1}${d.getDate()}${d.getHours()}`;
     return {
       title: title.replace("%s", result.term),
       url: result.url.replace("%YYYYMMDDHH%", date),
