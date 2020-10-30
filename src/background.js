@@ -11,7 +11,7 @@ const BRANCHES = {
   TREATMENT: "treatment",
 };
 
-const URLBAR_PROVIDER_NAME = "ProviderDynamicPalmTree";
+const URLBAR_PROVIDER_NAME = "ProviderDynamicQuickSuggest";
 
 let api = browser.experiments.urlbar;
 let testProvider = null;
