@@ -17,7 +17,7 @@ let api = browser.experiments.urlbar;
 let testProvider = null;
 
 // Our provider.
-class ProviderDynamicPalmTree extends UrlbarProvider {
+class ProviderDynamicQuickSuggest extends UrlbarProvider {
   constructor() {
     super();
     this._resultReturned = false;
@@ -125,7 +125,7 @@ async function enroll(isTreatmentBranch) {
     });
 
     // Enable our provider.
-    testProvider = new ProviderDynamicPalmTree();
+    testProvider = new ProviderDynamicQuickSuggest();
   }
 
   sendTestMessage("enrolled");
