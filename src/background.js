@@ -43,6 +43,7 @@ class ProviderDynamicQuickSuggest extends UrlbarProvider {
     if (!this.matchedResult) {
       return;
     }
+    this.matchedResult.isSponsored = true;
     let result = new UrlbarResult(
       UrlbarUtils.RESULT_TYPE.URL,
       UrlbarUtils.RESULT_SOURCE.OTHER_NETWORK,
