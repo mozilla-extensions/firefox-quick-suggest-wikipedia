@@ -25,29 +25,31 @@
  * and `.fromJSON`.
  */
 
-// TODO: We need to limit what tokens we can index on
-// and make sure this isnt a valid index.
-const RESULT_KEY = "_result";
+const RESULT_KEY = "^";
 
 class KeywordTree {
   constructor() {
-    // Store results in a nested map keyed by a single character.
     this.tree = new Map();
   }
 
   set(keyword, term) {
+    if (keyword.includes(RESULT_KEY)) {
+      throw new Error(`"${RESULT_KEY}" is reserved`);
+    }
     let tree = this.tree;
     for (let x = 0, c = ""; (c = keyword.charAt(x)); x++) {
       let child = tree.get(c) || new Map();
       tree.set(c, child);
       tree = child;
     }
-    // When we using real data we want to check that we only
-    // have unique keywords, however the test data has loads
-    // of duplicates.
-    /*if (tmp.get(RESULT_KEY)) {
-      console.warn(`adding keyword "${phrase}" for term: "${term}" already exists for term: "${tmp.get(RESULT_KEY)}"`);
-    }*/
+    // Check for duplicated
+    if (tree.get(RESULT_KEY)) {
+      throw new Error(
+        `"${keyword}" for term "${term}" already exists for term: "${tree.get(
+          RESULT_KEY
+        )}"`
+      );
+    }
     tree.set(RESULT_KEY, term);
   }
 

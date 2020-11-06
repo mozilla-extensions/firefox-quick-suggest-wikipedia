@@ -58,11 +58,11 @@ it("test flatten", () => {
     {
       he: {
         lzo: {
-          _result: "helzo foo",
+          "^": "helzo foo",
           " ": {
-            _result: "helzo bar",
-            foo: { _result: "helzo foo" },
-            bar: { _result: "helzo bar" },
+            "^": "helzo bar",
+            foo: { "^": "helzo foo" },
+            bar: { "^": "helzo bar" },
           },
         },
       },
@@ -70,4 +70,25 @@ it("test flatten", () => {
     tree.toJSON()
   );
   basicChecks(tree);
+});
+
+it("test reserved character", () => {
+  let tree = createTree();
+  try {
+    tree.set("helzo^foo");
+    assert.ok(false, "Should thrown when using reserved characters");
+  } catch (e) {
+    assert.ok(true, "Did throw when using reserved characters");
+  }
+});
+
+it("test duplicate keywords", () => {
+  let tree = createTree();
+  tree.set("foobar", "result1");
+  try {
+    tree.set("foobar", "result2");
+    assert.ok(false, "Should thrown when using duplicate keyword");
+  } catch (e) {
+    assert.ok(true, "Did throw when using duplicate keyword");
+  }
 });

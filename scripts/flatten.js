@@ -18,8 +18,10 @@ json.forEach(({ term, url, keywords }, i) => {
     term,
     url: `http://example.org?q=${term}`
   }
-  keywords.forEach((keyword) => tree.set(keyword, i));
-  tree.set(term, i);
+  try {
+    keywords.forEach((keyword) => tree.set(keyword, i));
+    tree.set(term, i);
+  } catch (e) {}
 });
 
 tree.flatten();
@@ -27,7 +29,7 @@ tree.flatten();
 doc.tree = tree.toJSON();
 
 fs.writeFileSync(
-  "data/data-processed-50000.json",
+  "data/data-default.json",
   JSON.stringify(doc, null, 2)
 );
 
