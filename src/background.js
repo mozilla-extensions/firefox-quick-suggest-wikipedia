@@ -44,6 +44,7 @@ class ProviderDynamicQuickSuggest extends UrlbarProvider {
       return;
     }
     this.matchedResult.isSponsored = true;
+    this.matchedResult.sendAttributionRequest = true;
     let result = new UrlbarResult(
       UrlbarUtils.RESULT_TYPE.URL,
       UrlbarUtils.RESULT_SOURCE.OTHER_NETWORK,
@@ -56,9 +57,7 @@ class ProviderDynamicQuickSuggest extends UrlbarProvider {
 
   cancelQuery(queryContext) {}
 
-  pickResult(result) {
-    console.log("Result picked!", result);
-  }
+  pickResult(result) {}
 
   handleEngagement(state) {
     if (state == "start") {

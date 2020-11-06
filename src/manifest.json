@@ -32,7 +32,8 @@
       "parent": {
         "scopes": ["addon_parent"],
         "paths": [["experiments", "urlbar"]],
-        "script": "api.js"
+        "script": "api.js",
+        "events": ["startup"]
       }
     }
   }

@@ -8,6 +8,7 @@ import webExt from "web-ext";
 
 import { rollup, watch } from "rollup";
 import copy from "rollup-plugin-copy";
+import fg from "fast-glob";
 
 const OUTDIR = "public/addon-build";
 
@@ -30,7 +31,16 @@ let inputOptions = {
         { src: "src/*.js", dest: OUTDIR },
         { src: "src/icons/*", dest: `${OUTDIR}/icons` },
       ]
-    })
+    }),
+    {
+        name: "watch-external",
+        async buildStart() {
+          let files = await fg("src/**/*");
+          for (let file of files) {
+            this.addWatchFile(file);
+          }
+        }
+    }
   ]
 };
 
@@ -51,6 +61,7 @@ async function _watch() {
     }
     if (event.code === "END") {
       if (!extensionRunner) {
+        webExt.util.logger.consoleStream.makeVerbose();
         extensionRunner = await webExt.cmd.run({
          firefox: "nightly",
          sourceDir: `${process.env.PWD}/${OUTDIR}/`,

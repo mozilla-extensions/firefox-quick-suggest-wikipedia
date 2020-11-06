@@ -16,6 +16,9 @@ const ADDON_PATH = "quicksuggest.xpi";
 const ABOUT_BLANK = "about:blank";
 const URLBAR_PROVIDER_NAME = "ProviderDynamicQuickSuggest";
 
+const ATTRIBUTION_URL =
+  "http://mochi.test:8888/browser/testing/extensions/browser/qs_attribution.sjs";
+
 // Use SIGNEDSTATE_MISSING when testing an unsigned, in-development version of
 // the add-on and SIGNEDSTATE_PRIVILEGED when testing the production add-on.
 const EXPECTED_ADDON_SIGNED_STATE = AddonManager.SIGNEDSTATE_MISSING;
@@ -35,6 +38,12 @@ async function waitForProcessesScalars(
       aAdditionalCondition(scalars)
     );
   });
+}
+
+async function getAttributionHits() {
+  let req = await fetch(ATTRIBUTION_URL + "?ignore=true");
+  let data = await req.text();
+  return parseInt(data, 10);
 }
 
 add_task(async function init() {
@@ -137,4 +146,35 @@ add_task(async function test_telemetry_multiple_impressions() {
       );
     });
   });
+});
+
+add_task(async function test_attribution() {
+  await SpecialPowers.pushPrefEnv({
+    set: [
+      ["browser.partnerlink.useAttributionURL", true],
+      ["browser.partnerlink.attributionURL", ATTRIBUTION_URL],
+    ],
+  });
+
+  Assert.equal(
+    0,
+    await getAttributionHits(),
+    "Should have no attributions yet"
+  );
+
+  await withAddon(async () => {
+    await BrowserTestUtils.withNewTab(ABOUT_BLANK, async () => {
+      gURLBar.focus();
+      EventUtils.sendString("frab");
+      EventUtils.synthesizeKey("KEY_ArrowDown");
+      EventUtils.synthesizeKey("KEY_Enter");
+      await BrowserTestUtils.browserLoaded(gBrowser.selectedBrowser);
+      Assert.ok(
+        /q=frabbits/.test(gBrowser.currentURI.spec),
+        "Selecting first result visits suggestions URL"
+      );
+    });
+  });
+
+  Assert.equal(1, await getAttributionHits(), "Search should be attributed");
 });

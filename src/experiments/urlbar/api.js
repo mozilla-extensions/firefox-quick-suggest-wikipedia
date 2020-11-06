@@ -14,6 +14,7 @@ const { XPCOMUtils } = ChromeUtils.import(
 
 XPCOMUtils.defineLazyModuleGetters(this, {
   Preferences: "resource://gre/modules/Preferences.jsm",
+  Services: "resource://gre/modules/Services.jsm",
   UrlbarProviderExtension: "resource:///modules/UrlbarProviderExtension.jsm",
 });
 
@@ -34,10 +35,12 @@ async function time(fun) {
 }
 
 this.experiments_urlbar = class extends ExtensionAPI {
+  onStartup() {
+    Services.tm.dispatchToMainThread(() => {
+      time(() => treeProvider.load(this.extension.rootURI));
+    });
+  }
   getAPI(context) {
-    // Do the initial loading of data, probably a better place for this?
-    time(() => treeProvider.load(context));
-
     return {
       experiments: {
         urlbar: {
