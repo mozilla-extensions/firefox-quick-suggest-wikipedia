@@ -21,6 +21,7 @@ class ProviderDynamicQuickSuggest extends UrlbarProvider {
   constructor() {
     super();
     this._resultReturned = false;
+    this._displayingResult = false;
     // Store the result from the urlbar provider so we can
     // share between isActive and startQuery.
     this.matchedResult = null;
@@ -36,13 +37,18 @@ class ProviderDynamicQuickSuggest extends UrlbarProvider {
 
   async isActive(queryContext) {
     this.matchedResult = await api.matchSearchTerm(queryContext.searchString);
+    if (!this.matchedResult) {
+      this._displayingResult = false;
+    }
     return !!this.matchedResult;
   }
 
   async startQuery(queryContext, addCallback) {
     if (!this.matchedResult) {
+      this._displayingResult = false;
       return;
     }
+    this._displayingResult = true;
     this.matchedResult.isSponsored = true;
     this.matchedResult.sendAttributionRequest = true;
     let result = new UrlbarResult(
@@ -62,15 +68,25 @@ class ProviderDynamicQuickSuggest extends UrlbarProvider {
   handleEngagement(state) {
     if (state == "start") {
       this._resultReturned = false;
+      this._displayingResult = false;
       return;
     }
 
-    if (["engagement", "abandonment"].includes(state) && this._resultReturned) {
-      browser.telemetry.keyedScalarAdd(
-        "browser.search.experiments.impressions",
-        URLBAR_PROVIDER_NAME,
-        1
-      );
+    if (["engagement", "abandonment"].includes(state)) {
+      if (this._resultReturned) {
+        browser.telemetry.keyedScalarAdd(
+          "browser.search.experiments.impressions",
+          URLBAR_PROVIDER_NAME,
+          1
+        );
+      }
+      if (this._displayingResult) {
+        browser.telemetry.keyedScalarAdd(
+          "browser.search.experiments.impressions_at_end",
+          URLBAR_PROVIDER_NAME,
+          1
+        );
+      }
     }
   }
 }
@@ -118,6 +134,11 @@ async function enroll(isTreatmentBranch) {
     // Add our specific scalars.
     await browser.telemetry.registerScalars("browser.search.experiments", {
       impressions: {
+        keyed: true,
+        kind: browser.telemetry.ScalarType.COUNT,
+        record_on_release: true,
+      },
+      impressions_at_end: {
         keyed: true,
         kind: browser.telemetry.ScalarType.COUNT,
         record_on_release: true,

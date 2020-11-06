@@ -1,0 +1,14 @@
+{
+  "data": [
+    {
+      "webExtension": {
+        "id": "engine@search.mozilla.org"
+      },
+      "orderHint": 10000,
+      "appliesTo": [{
+        "included": { "everywhere": true },
+        "default": "yes"
+      }]
+    }
+  ]
+}
