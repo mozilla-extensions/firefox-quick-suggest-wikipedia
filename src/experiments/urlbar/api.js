@@ -24,6 +24,20 @@ XPCOMUtils.defineLazyGetter(
   () => new Preferences({ defaultBranch: true })
 );
 
+XPCOMUtils.defineLazyPreferenceGetter(
+  this,
+  "defaultSuggestedIndex",
+  "extension.quick-suggest.suggestedIndex",
+  -1
+);
+
+XPCOMUtils.defineLazyPreferenceGetter(
+  this,
+  "maxSearchResults",
+  "browser.urlbar.maxRichResults",
+  10
+);
+
 let treeProvider = new KeywordTreeProvider();
 
 // TODO: Need a window reference to use performance.now I think.
@@ -44,8 +58,16 @@ this.experiments_urlbar = class extends ExtensionAPI {
     return {
       experiments: {
         urlbar: {
-          matchSearchTerm: phrase => {
-            return time(() => treeProvider.query(phrase));
+          matchSearchTerm: async (phrase) => {
+            let result = await time(() => treeProvider.query(phrase));
+            if (result) {
+              if (defaultSuggestedIndex == -1) {
+                result.suggestedIndex = maxSearchResults - 1;
+              } else {
+                result.suggestedIndex = defaultSuggestedIndex;
+              }
+            }
+            return result;
           },
           onViewUpdateRequested: new ExtensionCommon.EventManager({
             context,

@@ -49,14 +49,18 @@ class ProviderDynamicQuickSuggest extends UrlbarProvider {
       return;
     }
     this._displayingResult = true;
-    this.matchedResult.isSponsored = true;
-    this.matchedResult.sendAttributionRequest = true;
     let result = new UrlbarResult(
       UrlbarUtils.RESULT_TYPE.URL,
       UrlbarUtils.RESULT_SOURCE.OTHER_NETWORK,
-      this.matchedResult
+      {
+        title: this.matchedResult.title,
+        url: this.matchedResult.url,
+        icon: this.matchedResult.icon,
+        isSponsored: true,
+        sendAttributionRequest: true,
+      },
     );
-    result.suggestedIndex = 1;
+    result.suggestedIndex = this.matchedResult.suggestedIndex ?? 1;
     addCallback(this, result);
     this._resultReturned = true;
   }
