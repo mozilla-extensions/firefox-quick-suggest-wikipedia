@@ -167,3 +167,5 @@ lextab.py
 web-ext-artifacts/
 signed/
 src/secret_keys.js
+
+dist/
