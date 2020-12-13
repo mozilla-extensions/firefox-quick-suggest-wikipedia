@@ -41,7 +41,7 @@
     "build": "npm-run-all clean build:src build:zip build:finalize",
     "build:src": "./scripts/build-addon.js",
     "build:zip": "web-ext build",
-    "build:finalize": "mv web-ext-artifacts/*.zip web-ext-artifacts/quicksuggest.xpi",
+    "build:finalize": "cd web-ext-artifacts && for old in *.zip; do mv $old `basename $old .zip`.xpi; done",
     "clean": "rimraf web-ext-artifacts public",
     "start": "./scripts/build-addon.js watch"
   }
