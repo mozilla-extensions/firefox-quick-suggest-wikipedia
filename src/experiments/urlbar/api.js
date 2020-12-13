@@ -24,6 +24,8 @@ XPCOMUtils.defineLazyGetter(
   () => new Preferences({ defaultBranch: true })
 );
 
+/* global defaultSuggestedIndex */
+// TODO: For some reason -1 as a default value is confusing eslint.
 XPCOMUtils.defineLazyPreferenceGetter(
   this,
   "defaultSuggestedIndex",
@@ -58,7 +60,7 @@ this.experiments_urlbar = class extends ExtensionAPI {
     return {
       experiments: {
         urlbar: {
-          matchSearchTerm: async (phrase) => {
+          matchSearchTerm: async phrase => {
             let result = await time(() => treeProvider.query(phrase));
             if (result) {
               if (defaultSuggestedIndex == -1) {

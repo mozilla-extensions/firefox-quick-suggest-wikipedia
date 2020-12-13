@@ -118,7 +118,10 @@ add_task(async function test_telemetry_impressions() {
 
       await waitForProcessesScalars(["dynamic"], true, scalars => {
         // Wait for the scalars set in the content process to be available.
-        return "browser.search.experiments.impressions" in scalars.dynamic && "browser.search.experiments.impressions_at_end" in scalars.dynamic;
+        return (
+          "browser.search.experiments.impressions" in scalars.dynamic &&
+          "browser.search.experiments.impressions_at_end" in scalars.dynamic
+        );
       });
 
       let scalars = TelemetryTestUtils.getProcessScalars("dynamic", true, true);
@@ -156,7 +159,10 @@ add_task(async function test_telemetry_multiple_impressions() {
 
       await waitForProcessesScalars(["dynamic"], true, scalars => {
         // Wait for the scalars set in the content process to be available.
-        return "browser.search.experiments.impressions" in scalars.dynamic && "browser.search.experiments.impressions_at_end" in scalars.dynamic;
+        return (
+          "browser.search.experiments.impressions" in scalars.dynamic &&
+          "browser.search.experiments.impressions_at_end" in scalars.dynamic
+        );
       });
 
       let scalars = TelemetryTestUtils.getProcessScalars("dynamic", true, true);

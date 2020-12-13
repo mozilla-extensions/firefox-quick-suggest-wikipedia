@@ -58,7 +58,7 @@ class ProviderDynamicQuickSuggest extends UrlbarProvider {
         icon: this.matchedResult.icon,
         isSponsored: true,
         sendAttributionRequest: true,
-      },
+      }
     );
     result.suggestedIndex = this.matchedResult.suggestedIndex ?? 1;
     addCallback(this, result);

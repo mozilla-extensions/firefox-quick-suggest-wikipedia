@@ -6,7 +6,7 @@
 
 import * as assert from "assert";
 
-import KeywordTree from "../../src/experiments/urlbar/keywordTree.js";
+import KeywordTree from "../../src/experiments/urlbar/KeywordTree.js";
 
 let data = [
   {
