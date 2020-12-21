@@ -1,5 +1,5 @@
 {
-  "name": "quick-suggest-extension",
+  "name": "firefox-quick-suggest-keyword",
   "version": "0.0.1",
   "description": "WebExtension used for Firefox Quick Suggest experiments",
   "repository": "https://github.com/daleharvey/quick-suggest-extension",
@@ -38,10 +38,9 @@
     "lint": "npm run build && eslint ./src ./tests && web-ext lint --ignore-files=data/suggestions.json",
     "test:unit": "mocha ./tests/unit/",
     "test:browser": "./scripts/run-browser-tests.sh",
-    "build": "npm-run-all clean build:src build:zip build:finalize",
+    "build": "npm-run-all clean build:src build:extension",
     "build:src": "./scripts/build-addon.js",
-    "build:zip": "web-ext build",
-    "build:finalize": "cd web-ext-artifacts && for old in *.zip; do mv $old `basename $old .zip`.xpi; done",
+    "build:extension": "web-ext build --overwrite-dest --filename firefox-quick-suggest-keyword.xpi",
     "clean": "rimraf web-ext-artifacts public",
     "start": "./scripts/build-addon.js watch"
   }

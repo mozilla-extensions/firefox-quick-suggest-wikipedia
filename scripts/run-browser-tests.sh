@@ -9,7 +9,7 @@ fi
 
 node ./scripts/build-test-data.js
 
-DATA_FILE=./data/data-test.json npm run build:dist
+DATA_FILE=./data/data-test.json npm run build
 
 cp -R tests/moz.build $GECKO_PATH/testing/extensions/moz.build
 cp web-ext-artifacts/*.xpi $GECKO_PATH/testing/extensions/browser/

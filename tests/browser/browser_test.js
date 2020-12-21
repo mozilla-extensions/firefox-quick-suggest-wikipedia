@@ -13,7 +13,7 @@ XPCOMUtils.defineLazyModuleGetters(this, {
 });
 
 // The path of the add-on file relative to `getTestFilePath`.
-const ADDON_PATH = "quicksuggest.xpi";
+const ADDON_PATH = "firefox-quick-suggest-keyword.xpi";
 const ABOUT_BLANK = "about:blank";
 const URLBAR_PROVIDER_NAME = "ProviderDynamicQuickSuggest";
 
@@ -25,7 +25,7 @@ const ATTRIBUTION_URL =
 const EXPECTED_ADDON_SIGNED_STATE = AddonManager.SIGNEDSTATE_MISSING;
 // const EXPECTED_ADDON_SIGNED_STATE = AddonManager.SIGNEDSTATE_PRIVILEGED;
 
-SearchTestUtils.init(Assert, registerCleanupFunction);
+SearchTestUtils.init(this);
 
 async function waitForProcessesScalars(
   aProcesses,
@@ -65,6 +65,8 @@ add_task(async function init() {
   let response = await fetch(`resource://search-extensions/engines.json`);
   let json = await response.json();
   await SearchTestUtils.updateRemoteSettingsConfig(json.data);
+
+  SpecialPowers.setCharPref("browser.partnerlink.attributionURL", "");
 });
 
 add_task(async function basic_test() {
@@ -83,7 +85,39 @@ add_task(async function basic_test() {
   });
 });
 
+add_task(async function test_attribution() {
+  await PlacesUtils.history.clear();
+  SpecialPowers.setCharPref(
+    "browser.partnerlink.attributionURL",
+    ATTRIBUTION_URL
+  );
+
+  Assert.equal(
+    0,
+    await getAttributionHits(),
+    "Should have no attributions yet"
+  );
+
+  await withAddon(async () => {
+    await BrowserTestUtils.withNewTab(ABOUT_BLANK, async () => {
+      gURLBar.focus();
+      EventUtils.sendString("frab");
+      EventUtils.synthesizeKey("KEY_ArrowDown");
+      EventUtils.synthesizeKey("KEY_Enter");
+      await BrowserTestUtils.browserLoaded(gBrowser.selectedBrowser);
+      Assert.ok(
+        /q=frabbits/.test(gBrowser.currentURI.spec),
+        "Selecting first result visits suggestions URL"
+      );
+    });
+  });
+
+  Assert.equal(1, await getAttributionHits(), "Search should be attributed");
+  SpecialPowers.setCharPref("browser.partnerlink.attributionURL", "");
+});
+
 add_task(async function test_telemetry_no_impressions() {
+  await PlacesUtils.history.clear();
   Services.telemetry.clearScalars();
   await withAddon(async () => {
     await BrowserTestUtils.withNewTab(ABOUT_BLANK, async () => {
@@ -103,6 +137,7 @@ add_task(async function test_telemetry_no_impressions() {
 });
 
 add_task(async function test_telemetry_impressions() {
+  await PlacesUtils.history.clear();
   Services.telemetry.clearScalars();
   await withAddon(async () => {
     await BrowserTestUtils.withNewTab(ABOUT_BLANK, async () => {
@@ -141,7 +176,8 @@ add_task(async function test_telemetry_impressions() {
   });
 });
 
-add_task(async function test_telemetry_multiple_impressions() {
+/*add_task(async function test_telemetry_multiple_impressions() {
+  await PlacesUtils.history.clear();
   Services.telemetry.clearScalars();
   await withAddon(async () => {
     await BrowserTestUtils.withNewTab(ABOUT_BLANK, async () => {
@@ -183,6 +219,7 @@ add_task(async function test_telemetry_multiple_impressions() {
 });
 
 add_task(async function test_telemetry_impressions_not_showing_at_end() {
+  await PlacesUtils.history.clear();
   Services.telemetry.clearScalars();
   await withAddon(async () => {
     await BrowserTestUtils.withNewTab(ABOUT_BLANK, async browser => {
@@ -218,35 +255,4 @@ add_task(async function test_telemetry_impressions_not_showing_at_end() {
       );
     });
   });
-});
-
-add_task(async function test_attribution() {
-  await SpecialPowers.pushPrefEnv({
-    set: [
-      ["browser.partnerlink.useAttributionURL", true],
-      ["browser.partnerlink.attributionURL", ATTRIBUTION_URL],
-    ],
-  });
-
-  Assert.equal(
-    0,
-    await getAttributionHits(),
-    "Should have no attributions yet"
-  );
-
-  await withAddon(async () => {
-    await BrowserTestUtils.withNewTab(ABOUT_BLANK, async () => {
-      gURLBar.focus();
-      EventUtils.sendString("frab");
-      EventUtils.synthesizeKey("KEY_ArrowDown");
-      EventUtils.synthesizeKey("KEY_Enter");
-      await BrowserTestUtils.browserLoaded(gBrowser.selectedBrowser);
-      Assert.ok(
-        /q=frabbits/.test(gBrowser.currentURI.spec),
-        "Selecting first result visits suggestions URL"
-      );
-    });
-  });
-
-  Assert.equal(1, await getAttributionHits(), "Search should be attributed");
-});
+});*/
