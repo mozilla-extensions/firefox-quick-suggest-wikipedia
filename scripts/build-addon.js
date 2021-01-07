@@ -30,6 +30,7 @@ let inputOptions = {
         { src: "src/manifest.json", dest: OUTDIR },
         { src: "src/*.js", dest: OUTDIR },
         { src: "src/icons/*", dest: `${OUTDIR}/icons` },
+        { src: "src/data/*", dest: `${OUTDIR}/data` },
       ]
     }),
     {

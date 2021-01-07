@@ -44,6 +44,7 @@ class KeywordTreeProvider {
     return {
       title: title.replace("%s", result.term),
       url: result.url.replace("%YYYYMMDDHH%", date),
+      description: result.description,
       icon: result.icon || this.icon,
     };
   }

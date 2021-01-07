@@ -44,7 +44,7 @@ class KeywordTree {
     }
     // Check for duplicated
     if (tree.get(RESULT_KEY)) {
-      throw new Error(
+      console.warn(
         `"${keyword}" for term "${term}" already exists for term: "${tree.get(
           RESULT_KEY
         )}"`

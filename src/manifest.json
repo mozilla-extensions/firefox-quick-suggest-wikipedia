@@ -1,16 +1,10 @@
 {
   "manifest_version": 2,
-  "name": "QuickSuggest",
+  "name": "QuickSuggest-Wikipedia",
   "version": "1.0",
   "applications": {
     "gecko": {
-      "id": "qs-experiment@mozilla.org",
-      "strict_min_version": "79.0"
-    }
-  },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "qs-experiment@mozilla.org",
+      "id": "firefox-quick-suggest-wikipedia@mozilla.org",
       "strict_min_version": "79.0"
     }
   },

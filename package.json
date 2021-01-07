@@ -1,8 +1,7 @@
 {
-  "name": "firefox-quick-suggest-keyword",
+  "name": "firefox-quick-suggest-wikipedia",
   "version": "0.0.1",
   "description": "WebExtension used for Firefox Quick Suggest experiments",
-  "repository": "https://github.com/daleharvey/quick-suggest-extension",
   "private": true,
   "license": "MPLv2",
   "type": "module",
@@ -16,6 +15,7 @@
     "sourceDir": "public/addon-build"
   },
   "dependencies": {
+    "node-fetch": "^2.6.1",
     "web-ext": "5.2.0"
   },
   "devDependencies": {
@@ -40,7 +40,7 @@
     "test:browser": "./scripts/run-browser-tests.sh",
     "build": "npm-run-all clean build:src build:extension",
     "build:src": "./scripts/build-addon.js",
-    "build:extension": "web-ext build --overwrite-dest --filename firefox-quick-suggest-keyword.xpi",
+    "build:extension": "web-ext build --overwrite-dest --filename firefox-quick-suggest-wikipedia.xpi",
     "clean": "rimraf web-ext-artifacts public",
     "start": "./scripts/build-addon.js watch"
   }

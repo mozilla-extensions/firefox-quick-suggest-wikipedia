@@ -55,6 +55,57 @@
             "description": "Search term to match"
           }
         ]
+      },
+      {
+        "name": "addDynamicResultType",
+        "type": "function",
+        "async": true,
+        "description": "Adds a dynamic result type. See UrlbarResult.addDynamicResultType().",
+        "parameters": [
+          {
+            "name": "name",
+            "type": "string",
+            "description": "The name of the result type."
+          },
+          {
+            "name": "type",
+            "type": "object",
+            "default": {},
+            "description": "The result type. Currently this should be an empty object (which is the default value)."
+          }
+        ]
+      },
+      {
+        "name": "addDynamicViewTemplate",
+        "type": "function",
+        "async": true,
+        "description": "Adds a view template for a dynamic result type. See UrlbarView.addDynamicViewTemplate().",
+        "parameters": [
+          {
+            "name": "name",
+            "type": "string",
+            "description": "The view template will be registered for the dynamic result type with this name."
+          },
+          {
+            "name": "viewTemplate",
+            "type": "object",
+            "additionalProperties":  true,
+            "description": "The view template."
+          }
+        ]
+      },
+      {
+        "name": "navigate",
+        "type": "function",
+        "async": true,
+        "description": "Navigates the current tab to given URL.",
+        "parameters": [
+          {
+            "name": "url",
+            "type": "string",
+            "description": "The URL to navigate to"
+          }
+        ]
       }
     ]
   }

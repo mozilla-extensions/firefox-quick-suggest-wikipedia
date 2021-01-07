@@ -11,7 +11,45 @@ const BRANCHES = {
   TREATMENT: "treatment",
 };
 
-const URLBAR_PROVIDER_NAME = "ProviderDynamicQuickSuggest";
+const URLBAR_PROVIDER_NAME = "ProviderDynamicQuickSuggestWiki";
+
+const VIEW_TEMPLATE = {
+  stylesheet: "data/style.css",
+  attributes: {
+    role: "group",
+    selectable: true,
+  },
+  children: [
+    {
+      name: "noWrap",
+      tag: "span",
+      classList: ["urlbarView-no-wrap"],
+      children: [
+        {
+          name: "icon",
+          tag: "img",
+          classList: ["urlbarView-favicon"],
+        },
+        {
+          name: "textContent",
+          tag: "div",
+          children: [
+            {
+              name: "title",
+              tag: "strong",
+              classList: ["urlbarView-title"],
+            },
+            {
+              name: "description",
+              tag: "div",
+              classList: ["urlbarView-description"],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
 
 let api = browser.experiments.urlbar;
 let testProvider = null;
@@ -20,6 +58,8 @@ let testProvider = null;
 class ProviderDynamicQuickSuggest extends UrlbarProvider {
   constructor() {
     super();
+    UrlbarResult.addDynamicResultType(URLBAR_PROVIDER_NAME);
+    UrlbarView.addDynamicViewTemplate(URLBAR_PROVIDER_NAME, VIEW_TEMPLATE);
     this._resultReturned = false;
     this._displayingResult = false;
     // Store the result from the urlbar provider so we can
@@ -36,7 +76,9 @@ class ProviderDynamicQuickSuggest extends UrlbarProvider {
   }
 
   async isActive(queryContext) {
-    this.matchedResult = await api.matchSearchTerm(queryContext.searchString);
+    this.matchedResult = await api.matchSearchTerm(
+      queryContext.searchString.toLowerCase()
+    );
     if (!this.matchedResult) {
       this._displayingResult = false;
     }
@@ -50,14 +92,14 @@ class ProviderDynamicQuickSuggest extends UrlbarProvider {
     }
     this._displayingResult = true;
     let result = new UrlbarResult(
-      UrlbarUtils.RESULT_TYPE.URL,
+      UrlbarUtils.RESULT_TYPE.DYNAMIC,
       UrlbarUtils.RESULT_SOURCE.OTHER_NETWORK,
       {
         title: this.matchedResult.title,
+        description: this.matchedResult.description,
         url: this.matchedResult.url,
         icon: this.matchedResult.icon,
-        isSponsored: true,
-        sendAttributionRequest: true,
+        dynamicType: URLBAR_PROVIDER_NAME,
       }
     );
     result.suggestedIndex = this.matchedResult.suggestedIndex ?? 1;
@@ -65,9 +107,30 @@ class ProviderDynamicQuickSuggest extends UrlbarProvider {
     this._resultReturned = true;
   }
 
+  getViewUpdate(result) {
+    let viewUpdate = {
+      title: {
+        textContent: result.payload.title,
+      },
+      description: {
+        textContent: result.payload.description,
+      },
+      icon: {
+        attributes: {
+          src: result.payload.icon,
+        },
+      },
+    };
+
+    return viewUpdate;
+  }
+
   cancelQuery(queryContext) {}
 
-  pickResult(result) {}
+  pickResult(result) {
+    // TODO: Fix that this leaves the focus in the omnibar.
+    browser.tabs.update({ url: this.matchedResult.url });
+  }
 
   handleEngagement(state) {
     if (state == "start") {
