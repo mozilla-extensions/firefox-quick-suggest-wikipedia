@@ -93,19 +93,6 @@
             "description": "The view template."
           }
         ]
-      },
-      {
-        "name": "navigate",
-        "type": "function",
-        "async": true,
-        "description": "Navigates the current tab to given URL.",
-        "parameters": [
-          {
-            "name": "url",
-            "type": "string",
-            "description": "The URL to navigate to"
-          }
-        ]
       }
     ]
   }

@@ -80,8 +80,6 @@ this.experiments_urlbar = class extends ExtensionAPI {
             }
             return result;
           },
-          navigate: url => {
-          },
           onViewUpdateRequested: new ExtensionCommon.EventManager({
             context,
             name: "experiments.urlbar.onViewUpdateRequested",

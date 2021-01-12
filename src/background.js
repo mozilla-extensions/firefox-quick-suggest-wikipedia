@@ -100,6 +100,7 @@ class ProviderDynamicQuickSuggest extends UrlbarProvider {
         url: this.matchedResult.url,
         icon: this.matchedResult.icon,
         dynamicType: URLBAR_PROVIDER_NAME,
+        shouldNavigate: true,
       }
     );
     result.suggestedIndex = this.matchedResult.suggestedIndex ?? 1;
@@ -126,11 +127,6 @@ class ProviderDynamicQuickSuggest extends UrlbarProvider {
   }
 
   cancelQuery(queryContext) {}
-
-  pickResult(result) {
-    // TODO: Fix that this leaves the focus in the omnibar.
-    browser.tabs.update({ url: this.matchedResult.url });
-  }
 
   handleEngagement(state) {
     if (state == "start") {
